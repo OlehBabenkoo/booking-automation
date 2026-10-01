@@ -2,10 +2,11 @@
 	"name": "booking-automation",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"tsc": "npx tsc --project tsconfig.json --noEmit",
+		"format": "biome format --write .",
+		"lin": "biome lint --write .",
 		"prepare": "husky",
 		"check": "biome check ."
 	},

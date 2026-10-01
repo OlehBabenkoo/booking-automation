@@ -10,7 +10,8 @@
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true
 	},
 	"exclude": ["node_modules", "dist", "playwright-report", "test-results"]
 }
