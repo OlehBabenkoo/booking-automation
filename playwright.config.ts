@@ -1,12 +1,16 @@
 import "dotenv/config";
 import { defineConfig } from "@playwright/test";
+import { VIEWPORT } from "./utils/viewports";
 
 const baseURL = process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  retries: 1,
-  reporter: [["html"]],
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [["html"], ["list"]],
   use: {
     baseURL,
     trace: "retain-on-failure",
@@ -18,7 +22,7 @@ export default defineConfig({
       use: {
         browserName: "chromium",
         channel: "chrome",
-        viewport: { width: 1920, height: 1080 },
+        viewport: VIEWPORT.fullHd,
       },
     },
     {
@@ -26,21 +30,21 @@ export default defineConfig({
       use: {
         browserName: "chromium",
         channel: "chrome",
-        viewport: { width: 414, height: 896 },
+        viewport: VIEWPORT.mobile,
       },
     },
     {
       name: "safari-desktop",
       use: {
         browserName: "webkit",
-        viewport: { width: 1920, height: 1080 },
+        viewport: VIEWPORT.fullHd,
       },
     },
     {
       name: "safari-mobile",
       use: {
         browserName: "webkit",
-        viewport: { width: 414, height: 896 },
+        viewport: VIEWPORT.mobile,
       },
     },
   ],
