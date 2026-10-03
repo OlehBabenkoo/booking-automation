@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { defineConfig } from "@playwright/test";
+import { defineConfig, devices } from "@playwright/test";
 import { VIEWPORT } from "./utils/viewports";
 
 const baseURL = process.env.BASE_URL;
@@ -20,7 +20,7 @@ export default defineConfig({
     {
       name: "chrome-desktop",
       use: {
-        browserName: "chromium",
+        ...devices["Desktop Chrome"],
         channel: "chrome",
         viewport: VIEWPORT.fullHd,
       },
@@ -28,23 +28,21 @@ export default defineConfig({
     {
       name: "chrome-mobile",
       use: {
-        browserName: "chromium",
+        ...devices["Pixel 7"],
         channel: "chrome",
-        viewport: VIEWPORT.mobile,
       },
     },
     {
       name: "safari-desktop",
       use: {
-        browserName: "webkit",
+        ...devices["Desktop Safari"],
         viewport: VIEWPORT.fullHd,
       },
     },
     {
       name: "safari-mobile",
       use: {
-        browserName: "webkit",
-        viewport: VIEWPORT.mobile,
+        ...devices["iPhone XR"],
       },
     },
   ],
