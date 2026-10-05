@@ -1,1 +1,17 @@
-npx lint-staged && npm run tsc
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$branch" != "HEAD" ]; then
+  if [ "$branch" = "main" ]; then
+    echo "Commits directly to 'main' are not allowed. Create a branch: <type>/<short-description>"
+    exit 1
+  fi
+
+  if ! echo "$branch" | grep -Eq '^(feat|fix|chore|refactor|docs)/[a-z0-9]+(-[a-z0-9]+)*$' || [ ${#branch} -gt 50 ]; then
+    echo "Invalid branch name: '$branch'"
+    echo "   Expected: <type>/<short-description>, type = feat|fix|chore|refactor|docs"
+    echo "   Lowercase kebab-case, max 50 characters. Example: feat/search-results-sorting"
+    exit 1
+  fi
+fi
+
+npx lint-staged
