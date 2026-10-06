@@ -41,7 +41,7 @@ npm run lint
 npm run check
 ```
 
-## Project sctucture
+## Project Structure
 booking-automation/
 ├── src/        Source TypeScript code
 ├── tests/      Automated tests
@@ -49,7 +49,7 @@ booking-automation/
 ├── biome.json  Biome configuration
 ├── package.json
 ├── tsconfig.json
-└── README.md (http://readme.md/)
+└── README.md
 
 
 ## Running Playwright Tests
@@ -73,3 +73,43 @@ lint-staged applies Biome checks to staged TypeScript and JavaScript files.
 You can run the same checks manually with:
 ```Bash
 npm run check
+```
+
+## Branching and Commit Strategy
+
+### Main Branch
+
+This project uses one default long-lived branch: `main`.
+
+The `main` branch must remain green, deployable, and runnable. Changes may be merged into `main` only through a Pull Request.
+
+### Branch Naming
+
+Use the following format:
+
+```text
+<type>/<short-description>
+```
+
+Keep branch names under approximately 50 characters. Use one of these initial branch types:
+
+- `feat/` - New tests, page objects, or services
+- `fix/` - Fixes for broken or flaky tests
+- `chore/` - Dependencies, configuration, CI, or tooling changes
+- `refactor/` - Restructuring without behavior changes
+- `docs/` - README and documentation changes
+
+### Short-Lived Branches
+
+- Create branches from the latest `main`, or from another short-lived branch when dependent work has not yet been merged.
+- Keep one branch focused on one task or ticket.
+- Merge short-lived branches back into `main` through a Pull Request.
+
+### Commit Messages
+
+Use Conventional Commits and align the commit type with the branch type:
+
+```text
+feat(searchResults): implement sorting test
+chore(ci): configure new workflow
+```
