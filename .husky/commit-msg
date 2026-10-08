@@ -6,7 +6,7 @@ case "$header" in
 esac
 
 if ! echo "$header" | grep -Eq '^(feat|fix|chore|refactor|docs)(\([A-Za-z0-9_-]+\))?: .+'; then
-  echo "âŒ Invalid commit message: '$header'"
+  echo "Invalid commit message: '$header'"
   echo "   Expected: <type>(<scope>): <description>"
   echo "   Example: feat(searchResults): implement sorting test"
   exit 1
