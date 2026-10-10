@@ -1,0 +1,49 @@
+name: Pull Request Check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  pull-request-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "26"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TSC check
+        run: npm run tsc
+
+      - name: Run lint/format checks
+        run: npm run check
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium chrome webkit
+
+      - name: Run affected tests
+        run: npx playwright test --only-changed=origin/${{ github.base_ref }} --pass-with-no-tests
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
