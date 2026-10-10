@@ -1,0 +1,29 @@
+header=$(head -n 1 "$1")
+
+
+case "$header" in
+  Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;;
+esac
+
+if ! echo "$header" | grep -Eq '^(feat|fix|chore|refactor|docs)(\([A-Za-z0-9_-]+\))?: .+'; then
+  echo "Invalid commit message: '$header'"
+  echo "   Expected: <type>(<scope>): <description>"
+  echo "   Example: feat(searchResults): implement sorting test"
+  exit 1
+fi
+
+if [ ${#header} -gt 72 ]; then
+  echo "Commit header is ${#header} characters, max is 72."
+  exit 1
+fi
+
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$branch" != "HEAD" ]; then
+  branch_type=${branch%%/*}
+  commit_type=${header%%[(:]*}
+  if [ "$commit_type" != "$branch_type" ]; then
+    echo "Commit type '$commit_type' does not match branch type '$branch_type' (branch: $branch)"
+    exit 1
+  fi
+fi
