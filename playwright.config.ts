@@ -2,17 +2,15 @@ import "dotenv/config";
 import { defineConfig, devices } from "@playwright/test";
 import { VIEWPORT } from "./utils/viewports";
 
-const baseURL = process.env.BASE_URL;
-
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [["html"], ["list"]],
   use: {
-    baseURL,
+    baseURL: "https://www.booking.com/",
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
