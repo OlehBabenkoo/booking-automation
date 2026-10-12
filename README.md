@@ -76,7 +76,8 @@ booking-automation/
 ├── biome.json               Biome configuration
 ├── playwright.config.ts     Playwright configuration
 ├── tsconfig.json
-└── package.json
+├── package.json
+└── README.md
 ```
 
 ## Git Conventions
