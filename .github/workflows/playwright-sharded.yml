@@ -67,7 +67,7 @@ steps:
         "--shard=${SHARD}/${SHARDS}"
         "--workers=${WORKERS}"
         "--trace=${TRACE_MODE}"
-        "--reporter=blob"
+        "--reporter=list,blob"
       )
 
       if [[ -n "$PROJECTS" ]]; then
@@ -101,18 +101,24 @@ steps:
       path: test-results/
       if-no-files-found: ignore
       retention-days: 7
-  merge-report:
+    merge-report:
     name: Merge HTML report
     if: ${{ always() && needs.tests.result != 'cancelled' }}
     needs: [tests]
     runs-on: ubuntu-24.04
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Checkout selected branch
+        uses: actions/checkout@v6
         with:
-          node-version: "26"
-  - name: Install Playwright
-    run: npm install --no-save @playwright/test
+          ref: ${{ inputs.branch }}
+  - name: Setup Node.js
+    uses: actions/setup-node@v6
+    with:
+      node-version: "26"
+      cache: npm
+
+  - name: Install dependencies
+    run: npm ci
 
   - name: Download shard reports
     uses: actions/download-artifact@v6
@@ -122,12 +128,14 @@ steps:
       merge-multiple: true
 
   - name: Merge reports into HTML
+    if: ${{ hashFiles('all-blob-reports/*.zip') != '' }}
     run: npx playwright merge-reports --reporter=html all-blob-reports
 
   - name: Upload merged HTML report
+    if: always()
     uses: actions/upload-artifact@v6
     with:
       name: playwright-html-report
       path: playwright-report/
-      if-no-files-found: error
+      if-no-files-found: ignore
       retention-days: 7
