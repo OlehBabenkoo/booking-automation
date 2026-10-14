@@ -128,30 +128,30 @@ merge-report:
         with:
           ref: ${{ inputs.branch }}
       - name: Setup Node.js
-    uses: actions/setup-node@v6
-    with:
-      node-version: "26"
-      cache: npm
+        uses: actions/setup-node@v6
+        with:
+          node-version: "26"
+          cache: npm
 
       - name: Install dependencies
-    run: npm ci
+        run: npm ci
 
       - name: Download shard reports
-    uses: actions/download-artifact@v6
-    with:
-      pattern: blob-report-*
-      path: all-blob-reports
-      merge-multiple: true
+        uses: actions/download-artifact@v6
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
 
       - name: Merge reports into HTML
-    if: ${{ hashFiles('all-blob-reports/*.zip') != '' }}
-    run: npx playwright merge-reports --reporter=html all-blob-reports
+        if: ${{ hashFiles('all-blob-reports/*.zip') != '' }}
+        run: npx playwright merge-reports --reporter=html all-blob-reports
 
       - name: Upload merged HTML report
-    if: always()
-    uses: actions/upload-artifact@v6
-    with:
-      name: playwright-html-report
-      path: playwright-report/
-      if-no-files-found: ignore
-      retention-days: 7
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
