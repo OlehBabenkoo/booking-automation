@@ -39,8 +39,8 @@ jobs:
             echo "shards must be a number from 1 to 8"
             exit 1
           fi
-        shard_list="$(seq -s, 1 "$SHARDS" | jq -Rc 'split(",") | map(tonumber)')"
-        echo "shard-list=$shard_list" >> "$GITHUB_OUTPUT"
+          shard_list="$(seq -s, 1 "$SHARDS" | jq -Rc 'split(",") | map(tonumber)')"
+          echo "shard-list=$shard_list" >> "$GITHUB_OUTPUT"
 tests:
     needs: [define-shards]
     name: Shard ${{ matrix.shard }} of ${{ inputs.shards }}
