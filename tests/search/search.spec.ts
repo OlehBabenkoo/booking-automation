@@ -1,4 +1,4 @@
-import { test } from "../../utils/fixtures/index";
+import { test } from "@utils/fixtures";
 
 test.describe("Search", () => {
   test('Test filling in "Destination" field', async ({ searchComponent, page }) => {

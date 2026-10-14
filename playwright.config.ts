@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { defineConfig, devices } from "@playwright/test";
-import { VIEWPORT } from "./utils/viewports";
+import { VIEWPORT } from "@utils/viewports";
 
 export default defineConfig({
   testDir: "./tests",
