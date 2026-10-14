@@ -1,11 +1,11 @@
-import { expect, Page, test } from "@playwright/test";
-import { BaseComponent } from "./base.component";
+import { expect, Page, test } from '@playwright/test';
+import { BaseComponent } from './base.component';
 
 export class SearchComponent extends BaseComponent {
-  private readonly destinationInput = this.root.locator("#searchbox-horizontal-destination-input");
+  private readonly destinationInput = this.root.locator('#searchbox-horizontal-destination-input');
 
   constructor(page: Page) {
-    super(page, "#SearchBoxDesktop");
+    super(page, '#SearchBoxDesktop');
   }
 
   public async fillDestination(value: string): Promise<void> {
