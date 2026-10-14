@@ -25,15 +25,31 @@ on:
 permissions:
   contents: read
 jobs:
-  tests:
+  define-shards:
+    runs-on: ubuntu-24.04
+    outputs:
+      shard-list: ${{ steps.set-shards.outputs.shard-list }}
+    steps:
+      - name: Create shard list
+        id: set-shards
+        env:
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          if ! [[ "$SHARDS" =~ ^[1-8]$ ]]; then
+            echo "shards must be a number from 1 to 8"
+            exit 1
+          fi
+        shard_list="$(seq -s, 1 "$SHARDS" | jq -Rc 'split(",") | map(tonumber)')"
+        echo "shard-list=$shard_list" >> "$GITHUB_OUTPUT"
+tests:
+    needs: [define-shards]
     name: Shard ${{ matrix.shard }} of ${{ inputs.shards }}
-    if: ${{ matrix.shard <= inputs.shards }}
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: ${{ fromJSON(needs.define-shards.outputs.shard-list) }}
 steps:
   - name: Checkout selected branch
     uses: actions/checkout@v6
@@ -101,7 +117,7 @@ steps:
       path: test-results/
       if-no-files-found: ignore
       retention-days: 7
-    merge-report:
+merge-report:
     name: Merge HTML report
     if: ${{ always() && needs.tests.result != 'cancelled' }}
     needs: [tests]
@@ -111,27 +127,27 @@ steps:
         uses: actions/checkout@v6
         with:
           ref: ${{ inputs.branch }}
-  - name: Setup Node.js
+      - name: Setup Node.js
     uses: actions/setup-node@v6
     with:
       node-version: "26"
       cache: npm
 
-  - name: Install dependencies
+      - name: Install dependencies
     run: npm ci
 
-  - name: Download shard reports
+      - name: Download shard reports
     uses: actions/download-artifact@v6
     with:
       pattern: blob-report-*
       path: all-blob-reports
       merge-multiple: true
 
-  - name: Merge reports into HTML
+      - name: Merge reports into HTML
     if: ${{ hashFiles('all-blob-reports/*.zip') != '' }}
     run: npx playwright merge-reports --reporter=html all-blob-reports
 
-  - name: Upload merged HTML report
+      - name: Upload merged HTML report
     if: always()
     uses: actions/upload-artifact@v6
     with:
