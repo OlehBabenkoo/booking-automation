@@ -1,5 +1,5 @@
-import * as components from "@features/components";
-import { test as base } from "@playwright/test";
+import * as components from '@features/components';
+import { test as base } from '@playwright/test';
 
 type ComponentTestFixture = {
   searchComponent: components.search;
