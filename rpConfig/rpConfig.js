@@ -1,18 +1,18 @@
 const rpConfig = {
-  apiKey: "<API_KEY>",
-  endpoint: "https://your.reportportal.server/api/v2",
-  project: "Your reportportal project name",
-  launch: "Your launch name",
+  apiKey: process.env.RP_API_KEY,
+  endpoint: process.env.RP_ENDPOINT,
+  project: process.env.RP_PROJECT,
+  launch: process.env.RP_LAUNCH_NAME,
+  mode: "DEFAULT",
   attributes: [
     {
-      key: "key",
-      value: "value",
-    },
-    {
-      value: "value",
+      key: "id",
+      value: "1111",
     },
   ],
-  description: "Your launch description",
+  description: "My launch",
+  includeTestSteps: true,
+  debug: false,
 };
 
 module.exports = { rpConfig };
