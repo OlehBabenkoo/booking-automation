@@ -1,0 +1,163 @@
+﻿name: Playwright Sharded Run
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        type: string
+        required: true
+      projects:
+        type: string
+        required: false
+        default: ""
+      grep:
+        type: string
+        required: false
+        default: ""
+      workers:
+        type: number
+        required: true
+      trace:
+        type: string
+        required: true
+      shards:
+        type: number
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  define-shards:
+    runs-on: ubuntu-24.04
+    outputs:
+      shard-list: ${{ steps.set-shards.outputs.shard-list }}
+    steps:
+      - name: Create shard list
+        id: set-shards
+        env:
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          if ! [[ "$SHARDS" =~ ^[1-8]$ ]]; then
+            echo "shards must be a number from 1 to 8"
+            exit 1
+          fi
+          shard_list="$(seq -s, 1 "$SHARDS" | jq -Rc 'split(",") | map(tonumber)')"
+          echo "shard-list=$shard_list" >> "$GITHUB_OUTPUT"
+
+  tests:
+    needs: [define-shards]
+    name: Shard ${{ matrix.shard }} of ${{ inputs.shards }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.define-shards.outputs.shard-list) }}
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "26"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium chrome webkit
+
+      - name: Run Playwright shard
+        shell: bash
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
+          PROJECTS: ${{ inputs.projects }}
+          GREP: ${{ inputs.grep }}
+          WORKERS: ${{ inputs.workers }}
+          TRACE_MODE: ${{ inputs.trace }}
+          SHARD: ${{ matrix.shard }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          args=(
+            "--shard=${SHARD}/${SHARDS}"
+            "--workers=${WORKERS}"
+            "--trace=${TRACE_MODE}"
+            "--reporter=list,blob"
+          )
+
+          if [[ -n "$PROJECTS" ]]; then
+            IFS=',' read -ra project_list <<< "$PROJECTS"
+            for project in "${project_list[@]}"; do
+              project="$(echo "$project" | xargs)"
+              [[ -n "$project" ]] && args+=("--project=$project")
+            done
+          fi
+
+          if [[ -n "$GREP" ]]; then
+            args+=("--grep=$GREP")
+          fi
+
+          npx playwright test "${args[@]}"
+
+      - name: Upload shard report for merging
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload shard test results and traces
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-results-${{ matrix.shard }}
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  merge-report:
+    name: Merge HTML report
+    if: ${{ always() && needs.tests.result != 'cancelled' }}
+    needs: [tests]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "26"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download shard reports
+        uses: actions/download-artifact@v6
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+
+      - name: Merge reports into HTML
+        if: ${{ hashFiles('all-blob-reports/*.zip') != '' }}
+        run: npx playwright merge-reports --reporter=html all-blob-reports
+
+      - name: Upload merged HTML report
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
