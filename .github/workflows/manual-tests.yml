@@ -29,7 +29,7 @@ on:
         required: true
         options:
           - "on"
-          - "off
+          - "off"
           - retain-on-failure
           - on-first-retry
           - retain-on-first-failure
