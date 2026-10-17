@@ -60,7 +60,7 @@ jobs:
   finish-rp-launch:
     runs-on: ubuntu-latest
     if: ${{ !cancelled() }}
-    needs: [start-rp-launch, run-test]
+    needs: [start-rp-launch, run-tests]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
