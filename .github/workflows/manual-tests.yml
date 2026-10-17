@@ -3,11 +3,6 @@ name: Manual Playwright Tests
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: Branch to test
-        type: string
-        required: true
-        default: main
       projects:
         description: Comma-separated Playwright projects; empty runs all
         type: string
@@ -97,7 +92,7 @@ jobs:
     needs: [start-rp-launch]
     uses: ./.github/workflows/playwright-sharded.yml
     with:
-      branch: ${{ inputs.branch }}
+      branch: ${{ github.ref }}
       projects: ${{ inputs.projects }}
       grep: ${{ inputs.tags }}
       workers: ${{ inputs.workers }}

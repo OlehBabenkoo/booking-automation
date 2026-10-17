@@ -3,12 +3,7 @@ on:
   schedule:
     - cron: "0 2 * * *"
   workflow_dispatch:
-    inputs:
-      branch:
-        description: Branch to test
-        type: string
-        required: true
-        default: main
+  
 jobs:
   start-rp-launch:
     runs-on: ubuntu-latest
@@ -49,7 +44,7 @@ jobs:
     needs: [start-rp-launch]
     uses: ./.github/workflows/playwright-sharded.yml
     with:
-      branch: ${{ inputs.branch || 'main' }}
+      branch: ${{ github.ref || 'main' }}
       projects: ""
       grep: ""
       workers: 2
