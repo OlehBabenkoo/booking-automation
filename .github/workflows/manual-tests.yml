@@ -48,6 +48,14 @@ on:
           - "7"
           - "8"
         default: "1"
+      rp-launch-mode:
+        description: "Report Portal launch mode"
+        type: choice
+        required: true
+        options:
+          - "DEFAULT"
+          - "DEBUG"
+        default: "DEBUG"
 
 jobs:
   start-rp-launch:
@@ -79,8 +87,8 @@ jobs:
           RP_API_KEY: ${{ secrets.RP_API_KEY }}
           RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
           RP_PROJECT: ${{ secrets.RP_PROJECT }}
-          RP_LAUNCH_NAME: ${{ github.repository }}
-          RP_MODE: DEFAULT
+          RP_LAUNCH_NAME: "[${{ github.repository }}] Run: ${{ inputs.projects }} ${{ inputs.tags }}"
+          RP_MODE: ${{ inputs.rp-launch-mode }}
           RUN_ID: ${{ github.run_id }}
           BRANCH_NAME: ${{ github.ref_name }}
           RUN_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -95,12 +103,7 @@ jobs:
       workers: ${{ inputs.workers }}
       trace: ${{ inputs.trace }}
       shards: ${{ fromJSON(inputs.shards) }}
-    env:
-        RP_LAUNCH_ID: ${{ needs.start-rp-launch.outputs.rp_launch_id }}
-        RP_API_KEY: ${{ secrets.RP_API_KEY }}
-        RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
-        RP_PROJECT: ${{ secrets.RP_PROJECT }}
-        RP_LAUNCH_NAME: ${{ github.repository }}
+      launch_id: ${{ needs.start-rp-launch.outputs.rp_launch_id }}
 
   finish-rp-launch:
     runs-on: ubuntu-latest
