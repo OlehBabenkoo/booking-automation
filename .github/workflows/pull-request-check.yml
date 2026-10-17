@@ -5,7 +5,43 @@ on:
     branches: [main]
 
 jobs:
+  start-rp-launch:
+    runs-on: ubuntu-latest
+    outputs:
+      rp_launch_id: ${{ steps.rp_launch.outputs.rp_launch_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start launch and set it to output
+        id: rp_launch
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const startLaunch = require('./rpConfig/startLaunch.js');
+            const launchId = await startLaunch();
+
+            core.setOutput('rp_launch_id', launchId);
+        env:
+          RP_API_KEY: ${{ secrets.RP_API_KEY }}
+          RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
+          RP_PROJECT: ${{ secrets.RP_PROJECT }}
+          RP_LAUNCH_NAME: "[${{ github.repository }}] Pull request check"
+          RP_MODE: DEBUG
+          RUN_ID: ${{ github.run_id }}
+          BRANCH_NAME: "${{ github.head_ref }} -> ${{ github.base_ref }}"
+          RUN_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
   pull-request-checks:
+    needs: [start-rp-launch]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
 
@@ -37,6 +73,10 @@ jobs:
         run: npx playwright test --only-changed=origin/${{ github.base_ref }} --pass-with-no-tests
         env:
           BASE_URL: ${{ vars.BASE_URL }}
+          RP_LAUNCH_ID: ${{ needs.start-rp-launch.outputs.rp_launch_id }}
+          RP_API_KEY: ${{ secrets.RP_API_KEY }}
+          RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
+          RP_PROJECT: ${{ secrets.RP_PROJECT }}
 
       - name: Upload test artifacts
         if: failure()
@@ -47,3 +87,31 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+
+  finish-rp-launch:
+    runs-on: ubuntu-latest
+    if: ${{ !cancelled() }}
+    needs: [start-rp-launch, pull-request-checks]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Finish RP launch
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const finishLaunch = require('./rpConfig/finishLaunch.js');
+            await finishLaunch();
+        env:
+          RP_LAUNCH_ID: ${{ needs.start-rp-launch.outputs.rp_launch_id }}
+          RP_API_KEY: ${{ secrets.RP_API_KEY }}
+          RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
+          RP_PROJECT: ${{ secrets.RP_PROJECT }}
