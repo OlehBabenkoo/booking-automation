@@ -73,6 +73,10 @@ jobs:
         run: npx playwright test --only-changed=origin/${{ github.base_ref }} --pass-with-no-tests
         env:
           BASE_URL: ${{ vars.BASE_URL }}
+          RP_LAUNCH_ID: ${{ needs.start-rp-launch.outputs.rp_launch_id }}
+          RP_API_KEY: ${{ secrets.RP_API_KEY }}
+          RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
+          RP_PROJECT: ${{ secrets.RP_PROJECT }}
 
       - name: Upload test artifacts
         if: failure()
