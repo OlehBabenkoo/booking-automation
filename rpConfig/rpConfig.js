@@ -3,14 +3,18 @@ const rpConfig = {
   endpoint: process.env.RP_ENDPOINT,
   project: process.env.RP_PROJECT,
   launch: process.env.RP_LAUNCH_NAME,
-  mode: "DEFAULT",
+  mode: process.env.RP_MODE,
   attributes: [
     {
-      key: "id",
-      value: "1111",
+      key: "RUN_ID",
+      value: process.env.RUN_ID,
+    },
+    {
+      key: "BRANCH_NAME",
+      value: process.env.BRANCH_NAME,
     },
   ],
-  description: "My launch",
+  description: process.env.RUN_URL,
   includeTestSteps: true,
   debug: false,
 };
