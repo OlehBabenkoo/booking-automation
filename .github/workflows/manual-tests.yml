@@ -28,8 +28,8 @@ on:
         type: choice
         required: true
         options:
-          - on
-          - off
+          - "on"
+          - "off"
           - retain-on-failure
           - on-first-retry
           - retain-on-first-failure
@@ -56,6 +56,6 @@ jobs:
       branch: ${{ inputs.branch }}
       projects: ${{ inputs.projects }}
       grep: ${{ inputs.tags }}
-      workers: ${{ inputs.workers }}
+      workers: ${{ fromJSON(inputs.workers) }}
       trace: ${{ inputs.trace }}
       shards: ${{ fromJSON(inputs.shards) }}
