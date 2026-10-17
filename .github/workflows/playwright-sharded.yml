@@ -23,6 +23,10 @@ on:
       shards:
         type: number
         required: true
+      launch_id:
+        type: string
+        required: true
+        default: ""
 
 permissions:
   contents: read
