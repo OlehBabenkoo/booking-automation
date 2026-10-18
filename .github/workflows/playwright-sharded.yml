@@ -70,7 +70,7 @@ jobs:
       RP_API_KEY: ${{ secrets.RP_API_KEY }}
       RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
       RP_PROJECT: ${{ secrets.RP_PROJECT }}
-      
+
     steps:
       - name: Checkout selected branch
         uses: actions/checkout@v6
@@ -88,6 +88,9 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium chrome webkit
+
+      - name: Debug env
+        run: node -e "console.log('KEY:', process.env.RP_API_KEY?.length, 'ENDPOINT:', process.env.RP_ENDPOINT?.length)"
 
       - name: Run Playwright shard
         shell: bash
