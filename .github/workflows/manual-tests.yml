@@ -95,7 +95,7 @@ jobs:
       branch: ${{ github.ref }}
       projects: ${{ inputs.projects }}
       grep: ${{ inputs.tags }}
-      workers: ${{ inputs.workers }}
+      workers: ${{ fromJSON(inputs.workers) }}
       trace: ${{ inputs.trace }}
       shards: ${{ fromJSON(inputs.shards) }}
       launch_id: ${{ needs.start-rp-launch.outputs.rp_launch_id }}
