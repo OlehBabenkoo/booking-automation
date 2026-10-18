@@ -27,7 +27,7 @@ on:
         type: string
         required: true
         default: ""
-        
+
     secrets:
       RP_API_KEY:
         required: true
@@ -65,6 +65,12 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJSON(needs.define-shards.outputs.shard-list) }}
+    env:
+      RP_LAUNCH_ID: ${{ inputs.launch_id }}
+      RP_API_KEY: ${{ secrets.RP_API_KEY }}
+      RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
+      RP_PROJECT: ${{ secrets.RP_PROJECT }}
+      
     steps:
       - name: Checkout selected branch
         uses: actions/checkout@v6
@@ -93,10 +99,6 @@ jobs:
           TRACE_MODE: ${{ inputs.trace }}
           SHARD: ${{ matrix.shard }}
           SHARDS: ${{ inputs.shards }}
-          RP_LAUNCH_ID: ${{ inputs.launch_id }}
-          RP_API_KEY: ${{ secrets.RP_API_KEY }}
-          RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
-          RP_PROJECT: ${{ secrets.RP_PROJECT }}
         run: |
           args=(
             "--shard=${SHARD}/${SHARDS}"
