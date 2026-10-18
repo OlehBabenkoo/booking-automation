@@ -27,7 +27,14 @@ on:
         type: string
         required: true
         default: ""
-
+        
+    secrets:
+      RP_API_KEY:
+        required: true
+      RP_ENDPOINT:
+        required: true
+      RP_PROJECT:
+        required: true
 permissions:
   contents: read
 
