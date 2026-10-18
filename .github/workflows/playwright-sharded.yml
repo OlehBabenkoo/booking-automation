@@ -107,7 +107,6 @@ jobs:
             "--shard=${SHARD}/${SHARDS}"
             "--workers=${WORKERS}"
             "--trace=${TRACE_MODE}"
-            "--reporter=list,blob,@reportportal/agent-js-playwright"
           )
 
           if [[ -n "$PROJECTS" ]]; then
