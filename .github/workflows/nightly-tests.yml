@@ -43,6 +43,7 @@ jobs:
   run-tests:
     needs: [start-rp-launch]
     uses: ./.github/workflows/playwright-sharded.yml
+    secrets: inherit
     with:
       branch: ${{ github.ref || 'main' }}
       projects: ""

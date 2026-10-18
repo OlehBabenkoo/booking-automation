@@ -89,9 +89,6 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium chrome webkit
 
-      - name: Debug env
-        run: node -e "console.log('KEY:', process.env.RP_API_KEY?.length, 'ENDPOINT:', process.env.RP_ENDPOINT?.length)"
-
       - name: Run Playwright shard
         shell: bash
         env:
