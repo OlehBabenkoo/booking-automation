@@ -7,7 +7,5 @@ test.describe("Search", () => {
 
     await searchComponent.fillDestination("Lviv");
     await searchComponent.verifyDestinationValue("Lviv");
-    const array = [1, 3, 4];
-    array.pop();
   });
 });

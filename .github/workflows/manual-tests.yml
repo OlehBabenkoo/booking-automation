@@ -23,8 +23,8 @@ on:
         type: choice
         required: true
         options:
-          - on
-          - off
+          - "on"
+          - "off"
           - retain-on-failure
           - on-first-retry
           - retain-on-first-failure
