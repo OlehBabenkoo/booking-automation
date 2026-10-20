@@ -35,7 +35,7 @@ on:
           - retain-on-first-failure
         default: retain-on-failure
       shards:
-        description: Number of shards (1-8)
+        description: Number of shards (1-4)
         type: choice
         required: true
         options:
