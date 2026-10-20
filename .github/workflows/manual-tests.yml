@@ -64,10 +64,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 26
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Start launch and set it to output
         id: rp_launch
@@ -112,10 +112,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 26
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Finish RP launch
         uses: actions/github-script@v8
