@@ -1,0 +1,21 @@
+name: Nightly Playwright Tests
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to test
+        type: string
+        required: true
+        default: main
+jobs:
+  run-tests:
+    uses: ./.github/workflows/playwright-sharded.yml
+    with:
+      branch: ${{ inputs.branch || 'main' }}
+      projects: ""
+      grep: ""
+      workers: 2
+      trace: retain-on-failure
+      shards: 4
