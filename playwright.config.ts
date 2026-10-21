@@ -1,46 +1,46 @@
-import "dotenv/config";
-import { defineConfig, devices } from "@playwright/test";
-import { VIEWPORT } from "./utils/viewports";
+import 'dotenv/config';
+import { defineConfig, devices } from '@playwright/test';
+import { VIEWPORT } from '@utils/viewports';
 
 export default defineConfig({
-  testDir: "./tests",
+  testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: [["html"], ["list"]],
+  reporter: [['html'], ['list']],
   use: {
-    baseURL: "https://www.booking.com/",
-    trace: "retain-on-failure",
-    screenshot: "only-on-failure",
+    baseURL: 'https://www.booking.com/',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {
-      name: "chrome-desktop",
+      name: 'chrome-desktop',
       use: {
-        ...devices["Desktop Chrome"],
-        channel: "chrome",
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
         viewport: VIEWPORT.fullHd,
       },
     },
     {
-      name: "chrome-mobile",
+      name: 'chrome-mobile',
       use: {
-        ...devices["Pixel 7"],
-        channel: "chrome",
+        ...devices['Pixel 7'],
+        channel: 'chrome',
       },
     },
     {
-      name: "safari-desktop",
+      name: 'safari-desktop',
       use: {
-        ...devices["Desktop Safari"],
+        ...devices['Desktop Safari'],
         viewport: VIEWPORT.fullHd,
       },
     },
     {
-      name: "safari-mobile",
+      name: 'safari-mobile',
       use: {
-        ...devices["iPhone XR"],
+        ...devices['iPhone XR'],
       },
     },
   ],
