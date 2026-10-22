@@ -12,7 +12,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@features/*": ["./features/*"],
+      "@utils/*": ["./utils/*"]
+    }
   },
   "exclude": ["node_modules", "dist", "playwright-report", "test-results"]
 }

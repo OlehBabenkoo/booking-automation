@@ -1,2 +1,1 @@
-export const projectName = "booking-automation";
-//
+export const projectName = 'booking-automation';

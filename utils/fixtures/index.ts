@@ -1,5 +1,5 @@
-import { componentTest } from "./componentFixture";
+import { componentTest } from './componentFixture';
 
 export const test = componentTest;
 
-export { expect } from "@playwright/test";
+export { expect } from '@playwright/test';
