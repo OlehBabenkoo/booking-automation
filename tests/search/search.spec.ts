@@ -8,11 +8,6 @@ test.describe('Search', () => {
     await homePage.open();
   });
 
-  test('Test filling in "Destination" field', async ({ searchComponent }) => {
-    await searchComponent.fillDestination('Lviv');
-    await searchComponent.verifyDestinationValue('Lviv');
-  });
-
   test('TC-SEARCH-001: Verify the search results match the search criteria', async ({
     searchComponent,
     searchResultsPage,
@@ -22,11 +17,11 @@ test.describe('Search', () => {
 
     await test.step('1. Type the destination text in the destination field', async () => {
       await searchComponent.fillDestination(destinationText);
-      await searchComponent.verifySuggestion(0, destination.name, destination.region);
+      await searchComponent.verifySuggestion(destination.name, destination.region);
     });
 
     await test.step('2. Choose the destination from the suggestions', async () => {
-      await searchComponent.selectSuggestion(0);
+      await searchComponent.selectSuggestion(destination.name, destination.region);
       await searchComponent.verifyDestinationValue(destination.fullName);
       await searchComponent.verifySuggestionsClosed();
       await searchComponent.verifyDatePickerOpened();

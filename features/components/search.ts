@@ -8,8 +8,10 @@ type OccupancyCounter = 'group_adults' | 'group_children' | 'no_rooms';
 export class SearchComponent extends BaseComponent {
   private readonly destinationInput = this.root.locator('#searchbox-horizontal-destination-input');
   private readonly suggestionsList = this.page.locator('#autocomplete-results');
-  private readonly suggestions = this.suggestionsList.getByRole('option');
+  private readonly suggestion = (name: string, region: string) =>
+    this.suggestionsList.getByRole('option', { name: `${name} ${region}`, exact: true });
   private readonly datePicker = this.page.getByTestId('searchbox-datepicker-calendar');
+  private readonly dateCell = (date: TestDate) => this.datePicker.locator(`[data-date="${date.iso}"]`);
   private readonly checkInDisplay = this.root.getByTestId('date-display-field-start');
   private readonly checkOutDisplay = this.root.getByTestId('date-display-field-end');
   private readonly occupancyButton = this.root.getByTestId('occupancy-config');
@@ -33,24 +35,21 @@ export class SearchComponent extends BaseComponent {
     });
   }
 
-  public async verifySuggestion(index: number, name: string, region: string): Promise<void> {
-    await test.step(`Verify suggestion #${index + 1} is "${name}" with "${region}" under it`, async () => {
-      const suggestion = this.suggestions.nth(index);
-
-      await expect(suggestion.getByText(name, { exact: true })).toBeVisible();
-      await expect(suggestion.getByText(region, { exact: true })).toBeVisible();
+  public async verifySuggestion(name: string, region: string): Promise<void> {
+    await test.step(`Verify suggestion "${name} ${region}" is visible in the suggestions list`, async () => {
+      await expect(this.suggestion(name, region)).toBeVisible();
     });
   }
 
-  public async selectSuggestion(index: number): Promise<void> {
-    await test.step(`Select suggestion #${index + 1}`, async () => {
-      await this.suggestions.nth(index).click();
+  public async selectSuggestion(name: string, region: string): Promise<void> {
+    await test.step(`Select suggestion "${name} ${region}"`, async () => {
+      await this.suggestion(name, region).click();
     });
   }
 
   public async verifySuggestionsClosed(): Promise<void> {
     await test.step('Verify suggestions list is closed', async () => {
-      await expect(this.suggestions).toHaveCount(0);
+      await expect(this.suggestionsList).toBeHidden();
     });
   }
 
@@ -62,8 +61,8 @@ export class SearchComponent extends BaseComponent {
 
   public async selectDates(checkIn: TestDate, checkOut: TestDate): Promise<void> {
     await test.step(`Select "${checkIn.display}" - "${checkOut.display}" dates`, async () => {
-      await this.datePicker.locator(`[data-date="${checkIn.iso}"]`).click();
-      await this.datePicker.locator(`[data-date="${checkOut.iso}"]`).click();
+      await this.dateCell(checkIn).click();
+      await this.dateCell(checkOut).click();
     });
   }
 

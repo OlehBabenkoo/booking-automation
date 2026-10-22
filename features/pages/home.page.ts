@@ -1,5 +1,7 @@
 import { Locator, Page, test } from '@playwright/test';
 
+type Language = 'en-gb' | 'uk';
+
 export class HomePage {
   private readonly signInModalDismissButton: Locator;
 
@@ -9,9 +11,9 @@ export class HomePage {
     });
   }
 
-  public async open(): Promise<void> {
-    await test.step('Open Home page in English (UK)', async () => {
-      await this.page.goto('/?lang=en-gb');
+  public async open(language: Language = 'en-gb'): Promise<void> {
+    await test.step(`Open Home page (lang=${language})`, async () => {
+      await this.page.goto(`/?lang=${language}`);
       await this.dismissSignInModal();
     });
   }
