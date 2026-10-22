@@ -1,10 +1,11 @@
-// import { test } from "../../utils/fixtures/index";
+import { test } from '../../utils/fixtures/index';
 
-// // test.describe("Search", () => {
-// //   test('Test filling in "Destination" field', async ({ searchComponent, page }) => {
-// //     await page.goto("/");
+test.describe('Search', () => {
+  test.skip();
+  test('Test filling in "Destination" field', async ({ searchComponent, page }) => {
+    await page.goto('/');
 
-// //     await searchComponent.fillDestination("Lviv");
-// //     await searchComponent.verifyDestinationValue("Lviv");
-// //   });
-// // });
+    await searchComponent.fillDestination('Lviv');
+    await searchComponent.verifyDestinationValue('Lviv');
+  });
+});
