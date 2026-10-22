@@ -1,5 +1,5 @@
-const RPClient = require("@reportportal/client-javascript");
-const { rpConfig } = require("./rpConfig");
+const RPClient = require('@reportportal/client-javascript');
+const { rpConfig } = require('./rpConfig');
 
 const client = new RPClient(rpConfig);
 

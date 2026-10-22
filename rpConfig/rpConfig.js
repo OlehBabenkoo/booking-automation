@@ -6,11 +6,11 @@ const rpConfig = {
   mode: process.env.RP_MODE,
   attributes: [
     {
-      key: "RUN_ID",
+      key: 'RUN_ID',
       value: process.env.RUN_ID,
     },
     {
-      key: "BRANCH_NAME",
+      key: 'BRANCH_NAME',
       value: process.env.BRANCH_NAME,
     },
   ],
