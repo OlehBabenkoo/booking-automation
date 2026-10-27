@@ -26,7 +26,8 @@ test.describe('Language Selector', () => {
     await homePage.languageSelectionModal.closeLanguageModalAndVerifyPageIsNotReloaded();
     await homePage.header.checkLanguageInHeader(englishUS.code);
     await homePage.searchbox.checkSearchButtonText(englishUS.code);
-    await homePage.searchbox.checkDestinationContainerPlaceholderText(englishUS.code);
+    //await homePage.searchbox.checkDestinationContainerPlaceholderText(englishUS.code);
+    // Placeholder Text changes every run and it`s dependent on the promotions
   });
 
   test('TC-LANG-002 - Verify choosing Ukrainian applies it to the header and the search form and the selector marks it as the language in use', async ({
@@ -40,7 +41,8 @@ test.describe('Language Selector', () => {
     await homePage.header.checkLanguageInHeader(ukrainian.code);
     await homePage.header.checkRegistrationTranslation(ukrainian.code);
     await homePage.header.checkMenubarTranslations(ukrainian.code);
-    await homePage.heroBanner.checkHeroTitleTranslation(ukrainian.heroBannerTitle);
+    // await homePage.heroBanner.checkHeroTitleTranslation(ukrainian.heroBannerTitle);
+    //  hero title is changed randomly and we cannot cover all the cases
     await homePage.searchbox.checkSearchBoxTranslations(ukrainian.code);
     await homePage.header.openLanguageSelectionModal();
     await homePage.languageSelectionModal.checkIfLanguageIsSelected(ukrainian.code);

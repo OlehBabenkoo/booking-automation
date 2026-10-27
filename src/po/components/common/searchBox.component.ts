@@ -46,10 +46,6 @@ export class SearchboxComponent extends BaseComponent {
     await expect(this.searchButton).toHaveText(SEARCHBOX_TRANSLATIONS[language].searchButtonText);
   }
 
-  // async checkDestinationContainerPlaceholderText(expectedText: string): Promise<void> {
-  //     await expect(this.searchBoxdestinationPlaceholder).toHaveAttribute("placeholder", expectedText);
-  // }
-
   async checkDestinationContainerPlaceholderText(language: Language): Promise<void> {
     await expect(this.searchBoxdestinationPlaceholder).toHaveAttribute(
       'placeholder',
@@ -66,7 +62,6 @@ export class SearchboxComponent extends BaseComponent {
 
     const checks = [
       { locator: this.searchBoxdestinationContainer, expected: texts.searchBoxDestinationTitle }, //
-      // { locator: this.searchBoxdestinationContainer, expected: texts.searchBoxDestinationTitle},// реализовано не тестом, надо по другому сткчаться, не через цикл
       { locator: this.searchBoxDatesContainer, expected: texts.searchBoxDates }, //
       { locator: this.searchBoxOccupancyContainer, expected: texts.searchBoxOccupancyTitle },
       { locator: this.searchButton, expected: texts.searchButtonText },

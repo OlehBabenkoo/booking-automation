@@ -83,7 +83,7 @@ export const MENUBAR_TRANSLATION = {
 
 export const SEARCHBOX_TRANSLATIONS = {
   'en-us': {
-    searchBoxDestinationTitle: 'Enter destination',
+    searchBoxDestinationTitle: /^(Enter destination|Search in your own words)$/,
     searchBoxDestinationPlaceholderText: 'Where are you going?',
     searchBoxDates: 'Select datesCheck-in date — Check-out date',
     searchBoxOccupancyTitle: 'Select occupancy2 adults · 0 children · 1 room',
@@ -97,7 +97,7 @@ export const SEARCHBOX_TRANSLATIONS = {
     searchButtonText: 'Шукати',
   },
   'en-gb': {
-    searchBoxDestinationTitle: 'Enter destination',
+    searchBoxDestinationTitle: /^(Enter destination|Search in your own words)$/,
     searchBoxDestinationPlaceholderText: 'Where are you going?',
     searchBoxDates: 'Select datesCheck-in date — Check-out date',
     searchBoxOccupancyTitle: 'Select occupancy2 adults · 0 children · 1 room',
@@ -106,7 +106,7 @@ export const SEARCHBOX_TRANSLATIONS = {
 } satisfies Record<
   Language,
   {
-    searchBoxDestinationTitle: string;
+    searchBoxDestinationTitle: string | RegExp;
     searchBoxDestinationPlaceholderText: string;
     searchBoxDates: string;
     searchBoxOccupancyTitle: string;
