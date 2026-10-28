@@ -34,7 +34,7 @@ jobs:
         run: npx playwright install --with-deps chromium chrome webkit
 
       - name: Run affected tests
-        run: npx playwright test --only-changed=origin/${{ github.base_ref }} --pass-with-no-tests
+        run: npx playwright test --only-changed=origin/${{ github.base_ref }} --workers=2 --pass-with-no-tests
         env:
           BASE_URL: ${{ vars.BASE_URL }}
 
