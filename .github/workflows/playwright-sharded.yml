@@ -37,9 +37,14 @@ jobs:
         id: set-shards
         env:
           SHARDS: ${{ inputs.shards }}
+          WORKERS: ${{ inputs.workers }}
         run: |
-          if ! [[ "$SHARDS" =~ ^[1-8]$ ]]; then
-            echo "shards must be a number from 1 to 8"
+          if ! [[ "$SHARDS" =~ ^[1-4]$ ]]; then
+            echo "shards must be a number from 1 to 4"
+            exit 1
+          fi
+           if ! [[ "$WORKERS" =~ ^[1-4]$ ]]; then
+            echo "workers must be a number from 1 to 4"
             exit 1
           fi
           shard_list="$(seq -s, 1 "$SHARDS" | jq -Rc 'split(",") | map(tonumber)')"
@@ -143,7 +148,7 @@ jobs:
         run: npm ci
 
       - name: Download shard reports
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: blob-report-*
           path: all-blob-reports
