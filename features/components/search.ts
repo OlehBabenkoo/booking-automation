@@ -68,8 +68,8 @@ export class SearchComponent extends BaseComponent {
 
   public async verifyDatesValue(checkIn: TestDate, checkOut: TestDate): Promise<void> {
     await test.step(`Verify dates field shows "${checkIn.display} — ${checkOut.display}"`, async () => {
-      await expect(this.checkInDisplay).toHaveText(checkIn.display);
-      await expect(this.checkOutDisplay).toHaveText(checkOut.display);
+      await expect(this.checkInDisplay).toHaveText(checkIn.displayPattern);
+      await expect(this.checkOutDisplay).toHaveText(checkOut.displayPattern);
     });
   }
 

@@ -3,6 +3,10 @@ import { formatOccupancy, getLvivSearch } from '@utils/testData/search';
 
 test.describe('Search', () => {
   test.skip(({ isMobile }) => isMobile, 'Mobile search box is not supported yet');
+  test.fixme(
+    ({ browserName }) => browserName === 'webkit',
+    'Booking sometimes redirects search to /city/ua/lviv landing page',
+  );
 
   test.beforeEach(async ({ homePage }) => {
     await homePage.open();

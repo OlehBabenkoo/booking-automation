@@ -1,6 +1,8 @@
 export type TestDate = {
   iso: string;
   display: string;
+  // Booking picks the date format by region: "Tue 3 Nov" (en-GB) or "Tue, Nov 3" (en-US, e.g. CI runners)
+  displayPattern: RegExp;
 };
 
 const displayFormat = new Intl.DateTimeFormat('en-GB', {
@@ -8,6 +10,13 @@ const displayFormat = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric',
   month: 'short',
 });
+
+const toDisplayPattern = (date: Date): RegExp => {
+  const parts = Object.fromEntries(displayFormat.formatToParts(date).map(({ type, value }) => [type, value]));
+  const { weekday, day, month } = parts;
+
+  return new RegExp(`^${weekday},? (${day} ${month}|${month} ${day})$`);
+};
 
 const toIso = (date: Date): string => {
   const year = date.getFullYear();
@@ -24,5 +33,6 @@ export const daysFromToday = (days: number): TestDate => {
   return {
     iso: toIso(date),
     display: displayFormat.format(date).replace(',', ''),
+    displayPattern: toDisplayPattern(date),
   };
 };
