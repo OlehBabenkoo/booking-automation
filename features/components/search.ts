@@ -16,11 +16,11 @@ export class SearchComponent extends BaseComponent {
   private readonly checkOutDisplay = this.root.getByTestId('date-display-field-end');
   private readonly occupancyButton = this.root.getByTestId('occupancy-config');
   private readonly occupancyPopup = this.page.getByTestId('occupancy-popup');
-  private readonly occupancyDoneButton = this.occupancyPopup.getByRole('button', { name: 'Done' });
+  private readonly occupancyDoneButton = this.occupancyPopup.getByRole('button', { name: 'Done' }); // TODO: language-dependent locator, works only for English UI
   private readonly searchButton = this.root.locator('button[type="submit"]');
 
   constructor(page: Page) {
-    super(page, 'form[aria-label="Search properties"]');
+    super(page, 'form:has(#searchbox-horizontal-destination-input)');
   }
 
   public async fillDestination(value: string): Promise<void> {

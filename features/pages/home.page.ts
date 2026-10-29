@@ -1,6 +1,5 @@
 import { Locator, Page, test } from '@playwright/test';
-
-type Language = 'en-gb' | 'uk';
+import type { Language } from '@utils/testData/languages';
 
 export class HomePage {
   private readonly signInModalDismissButton: Locator;
