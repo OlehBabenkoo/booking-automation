@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 import { VIEWPORT } from '@utils/viewports';
+import { rpConfig } from './rpConfig/rpConfig';
 
 export default defineConfig({
   testDir: './tests',
@@ -8,7 +9,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: [['html'], ['list']],
+  reporter: process.env.CI
+    ? [['html'], ['list'], ['@reportportal/agent-js-playwright', rpConfig]]
+    : [['html'], ['list']],
   use: {
     baseURL: 'https://www.booking.com/',
     trace: 'retain-on-failure',

@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
     "paths": {
       "@features/*": ["./features/*"],
       "@utils/*": ["./utils/*"]
