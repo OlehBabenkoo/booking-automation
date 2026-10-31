@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { expect, Locator, Page, test } from '@playwright/test';
 import { BaseComponent } from './common/base.component';
 
 export class HeroBannerComponent extends BaseComponent {
@@ -11,6 +11,8 @@ export class HeroBannerComponent extends BaseComponent {
   }
 
   async checkHeroTitleTranslation(expectedText: string): Promise<void> {
-    await expect(this.heroBannerTitle).toHaveText(expectedText);
+    await test.step('Verify the page heading translation', async () => {
+      await expect(this.heroBannerTitle).toHaveText(expectedText);
+    });
   }
 }
