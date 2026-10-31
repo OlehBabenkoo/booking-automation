@@ -1,26 +1,30 @@
 import { expect, Page, test } from '@playwright/test';
 import type { TestDate } from '@utils/dates';
+import { type Language, SEARCHBOX_TRANSLATIONS } from '@utils/testData/languages';
 import { formatOccupancy, type Occupancy } from '@utils/testData/search';
-import { BaseComponent } from './base.component';
+import { BaseComponent } from './common/base.component';
 
 type OccupancyCounter = 'group_adults' | 'group_children' | 'no_rooms';
 
 export class SearchComponent extends BaseComponent {
+  private readonly destinationContainer = this.root.getByTestId('destination-container');
   private readonly destinationInput = this.root.locator('#searchbox-horizontal-destination-input');
   private readonly suggestionsList = this.page.locator('#autocomplete-results');
   private readonly suggestion = (name: string, region: string) =>
     this.suggestionsList.getByRole('option', { name: `${name} ${region}`, exact: true });
   private readonly datePicker = this.page.getByTestId('searchbox-datepicker-calendar');
   private readonly dateCell = (date: TestDate) => this.datePicker.locator(`[data-date="${date.iso}"]`);
+  private readonly datesContainer = this.root.getByTestId('searchbox-dates-container');
   private readonly checkInDisplay = this.root.getByTestId('date-display-field-start');
   private readonly checkOutDisplay = this.root.getByTestId('date-display-field-end');
+  private readonly occupancyContainer = this.root.locator('.b7c1d87e07'); //no other IDs or names
   private readonly occupancyButton = this.root.getByTestId('occupancy-config');
   private readonly occupancyPopup = this.page.getByTestId('occupancy-popup');
   private readonly occupancyDoneButton = this.occupancyPopup.getByRole('button', { name: 'Done' }); // TODO: language-dependent locator, works only for English UI
   private readonly searchButton = this.root.locator('button[type="submit"]');
 
   constructor(page: Page) {
-    super(page, 'form:has(#searchbox-horizontal-destination-input)');
+    super(page.locator('form:has(#searchbox-horizontal-destination-input)'));
   }
 
   public async fillDestination(value: string): Promise<void> {
@@ -95,6 +99,48 @@ export class SearchComponent extends BaseComponent {
   public async clickSearch(): Promise<void> {
     await test.step('Click "Search" button', async () => {
       await this.searchButton.click();
+    });
+  }
+
+  public async checkSearchButtonText(language: Language): Promise<void> {
+    await test.step(`Verify "Search" button text for "${language}" language`, async () => {
+      await expect(this.searchButton).toHaveText(SEARCHBOX_TRANSLATIONS[language].searchButtonText);
+    });
+  }
+
+  public async checkDestinationContainerPlaceholderText(language: Language): Promise<void> {
+    await test.step(`Verify "Destination" placeholder for "${language}" language`, async () => {
+      await expect(this.destinationInput).toHaveAttribute(
+        'placeholder',
+        SEARCHBOX_TRANSLATIONS[language].searchBoxDestinationPlaceholderText,
+      );
+    });
+  }
+
+  public async checkDestinationContainerTitle(expectedText: string): Promise<void> {
+    await test.step(`Verify "Destination" container shows "${expectedText}"`, async () => {
+      await expect(this.destinationContainer).toHaveText(expectedText);
+    });
+  }
+
+  public async checkSearchBoxTranslations(language: Language): Promise<void> {
+    const texts = SEARCHBOX_TRANSLATIONS[language];
+
+    await test.step(`Verify search form translations for "${language}" language`, async () => {
+      const checks = [
+        { locator: this.destinationContainer, expected: texts.searchBoxDestinationTitle },
+        { locator: this.datesContainer, expected: texts.searchBoxDates },
+        { locator: this.occupancyContainer, expected: texts.searchBoxOccupancyTitle },
+        { locator: this.searchButton, expected: texts.searchButtonText },
+      ];
+
+      for (const { locator, expected } of checks) {
+        await expect(locator).toHaveText(expected);
+      }
+      await expect(this.destinationInput).toHaveAttribute(
+        'placeholder',
+        texts.searchBoxDestinationPlaceholderText,
+      );
     });
   }
 
