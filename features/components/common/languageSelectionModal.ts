@@ -1,26 +1,22 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import type { Language } from '@utils/testData/languages';
 import { BaseComponent } from './base.component';
 
 export class LanguageSelectionModal extends BaseComponent {
+  private readonly closeLanguageModalButton = this.root.getByTestId('selection-modal-close');
+  // сломается на укр
+  private readonly suggestedLanguageItems = this.root
+    .getByRole('list', { name: 'Suggested for you' })
+    .getByTestId('selection-item');
+  // сломается на укр
+  private readonly allLanguageItems = this.root
+    .getByRole('list', { name: 'All languages' })
+    .getByTestId('selection-item');
+  private readonly languageButton = (language: Language) =>
+    this.root.getByTestId(/^(All languages|Усі мови)$/).locator(`button[lang="${language}"]`);
+
   constructor(page: Page) {
     super(page.getByTestId('selection-modal'));
-  }
-
-  private get closeLanguageModalButton(): Locator {
-    return this.root.getByTestId('selection-modal-close');
-  }
-  // сломается на укр
-  private get suggestedLanguageItems(): Locator {
-    return this.root.getByRole('list', { name: 'Suggested for you' }).getByTestId('selection-item');
-  }
-  // сломается на укр
-  private get allLanguageItems(): Locator {
-    return this.root.getByRole('list', { name: 'All languages' }).getByTestId('selection-item');
-  }
-
-  private languageButton(language: Language): Locator {
-    return this.root.getByTestId(/^(All languages|Усі мови)$/).locator(`button[lang="${language}"]`);
   }
 
   async selectLanguageAndVerifyPageIsReloaded(language: Language): Promise<void> {

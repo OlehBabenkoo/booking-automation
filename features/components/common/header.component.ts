@@ -1,49 +1,21 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { HEADER_TRANSLATIONS, Language, MENUBAR_TRANSLATION } from '@utils/testData/languages';
 import { BaseComponent } from './base.component';
 
 export class HeaderComponent extends BaseComponent {
+  private readonly languagePickerButton = this.root.getByTestId('header-language-picker-trigger');
+  private readonly listPropertyButton = this.root.getByTestId('header-custom-action-button');
+  private readonly signUpButton = this.root.getByTestId('header-sign-up-button');
+  private readonly signInButton = this.root.getByTestId('header-sign-in-button');
+  private readonly accommodationButton = this.root.locator('[id="accommodations"]');
+  private readonly flightsButton = this.root.locator('[id="flights"]');
+  private readonly packagesButton = this.root.locator('[id="packages"]');
+  private readonly carsButton = this.root.locator('[id="cars"]');
+  private readonly attractionsButton = this.root.locator('[id="attractions"]');
+  private readonly airportTaxisButton = this.root.locator('[id="airport_taxis"]');
+
   constructor(page: Page) {
     super(page.getByTestId('web-shell-header-mfe'));
-  }
-
-  private get languagePickerButton(): Locator {
-    return this.root.getByTestId('header-language-picker-trigger');
-  }
-
-  private get listPropertyButton(): Locator {
-    return this.root.getByTestId('header-custom-action-button');
-  }
-
-  private get signUpButton(): Locator {
-    return this.root.getByTestId('header-sign-up-button');
-  }
-
-  private get signInButton(): Locator {
-    return this.root.getByTestId('header-sign-in-button');
-  }
-
-  private get accommodationButton(): Locator {
-    return this.root.locator('[id="accommodations"]');
-  }
-
-  private get flightsButton(): Locator {
-    return this.root.locator('[id="flights"]');
-  }
-
-  private get packagesButton(): Locator {
-    return this.root.locator('[id="packages"]');
-  }
-  private get carsButton(): Locator {
-    return this.root.locator('[id="cars"]');
-  }
-
-  private get attractionsButton(): Locator {
-    return this.root.locator('[id="attractions"]');
-  }
-
-  private get airportTaxisButton(): Locator {
-    return this.root.locator('[id="airport_taxis"]');
   }
 
   async checkMenubarTranslations(language: Language): Promise<void> {

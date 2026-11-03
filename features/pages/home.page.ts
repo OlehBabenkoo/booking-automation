@@ -1,35 +1,15 @@
-import { errors, expect, type Locator, type Page, test } from '@playwright/test';
+import { errors, expect, type Page, test } from '@playwright/test';
 import type { Language } from '@utils/testData/languages';
-import {
-  HeaderComponent,
-  HeroBannerComponent,
-  LanguageSelectionModal,
-  SearchComponent,
-} from '../components/index.js';
 import { BasePage } from './base.page.js';
 
 export class HomePage extends BasePage {
-  readonly header: HeaderComponent;
-  readonly languageSelectionModal: LanguageSelectionModal;
-  readonly search: SearchComponent;
-  readonly heroBanner: HeroBannerComponent;
+  private readonly signInModalDismissButton = this.page.getByRole('button', {
+    name: /Dismiss sign.in info/i,
+  });
+  private readonly destinationInput = this.page.locator('#searchbox-horizontal-destination-input');
 
   constructor(page: Page) {
     super(page, '/');
-    this.header = new HeaderComponent(page);
-    this.languageSelectionModal = new LanguageSelectionModal(page);
-    this.search = new SearchComponent(page);
-    this.heroBanner = new HeroBannerComponent(page);
-  }
-
-  private get signInModalDismissButton(): Locator {
-    return this.page.getByRole('button', {
-      name: /Dismiss sign.in info/i,
-    });
-  }
-
-  private get destinationInput(): Locator {
-    return this.page.locator('#searchbox-horizontal-destination-input');
   }
 
   override async open(language: Language = 'en-gb'): Promise<void> {

@@ -2,6 +2,8 @@ import { test } from '@utils/fixtures';
 import { LANGUAGES } from '@utils/testData/languages';
 
 test.describe('Language Selector', () => {
+  test.slow(({ browserName }) => browserName === 'webkit', 'Booking renders slowly in WebKit');
+
   const englishGB = LANGUAGES.englishGB;
   const ukrainian = LANGUAGES.ukrainian;
   const expectedUaUrl = '/index.uk.html';
@@ -12,64 +14,69 @@ test.describe('Language Selector', () => {
   });
 
   test('TC-LANG-001 - Verify the language selector shows suggested and all languages, marks the language in use, and keeps it when closed without a choice', async ({
-    homePage,
+    headerComponent,
+    languageSelectionModal,
+    searchComponent,
     isMobile,
   }) => {
     test.skip(isMobile === true, 'Mobile page objects are not implemented yet');
 
     await test.step('1. Click the language selector button in the header', async () => {
-      await homePage.header.openLanguageSelectionModal();
+      await headerComponent.openLanguageSelectionModal();
     });
 
     await test.step('2. Check the groups in the dialog', async () => {
-      await homePage.languageSelectionModal.checkLanguageGroupsAreVisibleAndNotEmpty();
+      await languageSelectionModal.checkLanguageGroupsAreVisibleAndNotEmpty();
     });
 
     await test.step('3. Find "English (UK)" and "Українська" in the "All languages" group.', async () => {
-      await homePage.languageSelectionModal.checkLanguageInAllLanguages(englishGB.code);
-      await homePage.languageSelectionModal.checkLanguageInAllLanguages(ukrainian.code);
+      await languageSelectionModal.checkLanguageInAllLanguages(englishGB.code);
+      await languageSelectionModal.checkLanguageInAllLanguages(ukrainian.code);
     });
 
     await test.step('4. Check which language is marked.', async () => {
-      await homePage.languageSelectionModal.checkIfLanguageIsSelected(englishGB.code);
+      await languageSelectionModal.checkIfLanguageIsSelected(englishGB.code);
     });
 
     await test.step('5. Click the close (X) button without choosing a language', async () => {
-      await homePage.languageSelectionModal.closeLanguageModalAndVerifyPageIsNotReloaded();
+      await languageSelectionModal.closeLanguageModalAndVerifyPageIsNotReloaded();
     });
 
     await test.step('6. Check the header and the search form', async () => {
-      await homePage.header.checkLanguageInHeader(englishGB.code);
-      await homePage.search.checkSearchButtonText(englishGB.code);
+      await headerComponent.checkLanguageInHeader(englishGB.code);
+      await searchComponent.checkSearchButtonText(englishGB.code);
     });
   });
 
   test('TC-LANG-002 - Verify choosing Ukrainian applies it to the header and the search form and the selector marks it as the language in use', async ({
     homePage,
+    headerComponent,
+    languageSelectionModal,
+    searchComponent,
     isMobile,
   }) => {
     test.skip(isMobile === true, 'Mobile page objects are not implemented yet');
 
     await test.step('1. Click the language selector button in the header', async () => {
-      await homePage.header.openLanguageSelectionModal();
+      await headerComponent.openLanguageSelectionModal();
     });
 
     await test.step('2. Click "Українська" in the "All languages" group', async () => {
-      await homePage.languageSelectionModal.selectLanguageAndVerifyPageIsReloaded(ukrainian.code);
+      await languageSelectionModal.selectLanguageAndVerifyPageIsReloaded(ukrainian.code);
       await homePage.checkUrl(expectedUaUrl);
     });
 
     await test.step('3. Check the texts of the header and the search form', async () => {
-      await homePage.header.checkLanguageInHeader(ukrainian.code);
-      await homePage.header.checkRegistrationTranslation(ukrainian.code);
-      await homePage.header.checkMenubarTranslations(ukrainian.code);
-      await homePage.search.checkSearchBoxTranslations(ukrainian.code);
+      await headerComponent.checkLanguageInHeader(ukrainian.code);
+      await headerComponent.checkRegistrationTranslation(ukrainian.code);
+      await headerComponent.checkMenubarTranslations(ukrainian.code);
+      await searchComponent.checkSearchBoxTranslations(ukrainian.code);
     });
 
     await test.step('4. Click the language selector button in the header.', async () => {
-      await homePage.header.openLanguageSelectionModal();
-      await homePage.languageSelectionModal.checkIfLanguageIsSelected(ukrainian.code);
-      await homePage.languageSelectionModal.checkIfLanguageIsNotSelected(englishGB.code);
+      await headerComponent.openLanguageSelectionModal();
+      await languageSelectionModal.checkIfLanguageIsSelected(ukrainian.code);
+      await languageSelectionModal.checkIfLanguageIsNotSelected(englishGB.code);
     });
   });
 });
