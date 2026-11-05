@@ -1,22 +1,23 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import type { Language } from '@utils/testData/languages';
 import { BaseComponent } from './base.component';
 
 export class LanguageSelectionModal extends BaseComponent {
-  private readonly closeLanguageModalButton = this.root.getByTestId('selection-modal-close');
-  // сломается на укр
+  private readonly closeLanguageModalButton: Locator;
   private readonly suggestedLanguageItems = this.root
-    .getByRole('list', { name: 'Suggested for you' })
+    .getByRole('list', { name: /^(Suggested for you|Рекомендовано для вас)$/ })
     .getByTestId('selection-item');
-  // сломается на укр
   private readonly allLanguageItems = this.root
-    .getByRole('list', { name: 'All languages' })
+    .getByRole('list', { name: /^(All languages|Усі мови)$/ })
     .getByTestId('selection-item');
   private readonly languageButton = (language: Language) =>
     this.root.getByTestId(/^(All languages|Усі мови)$/).locator(`button[lang="${language}"]`);
 
-  constructor(page: Page) {
-    super(page.getByTestId('selection-modal'));
+  constructor(page: Page, isMobile: boolean) {
+    super(page.getByTestId(isMobile ? 'header-mobile-menu-language-picker-modal' : 'selection-modal'));
+    this.closeLanguageModalButton = isMobile
+      ? this.root.getByRole('button', { name: /^(Close language selector|Закрити меню вибору мови)$/ })
+      : this.root.getByTestId('selection-modal-close');
   }
 
   async selectLanguageAndVerifyPageIsReloaded(language: Language): Promise<void> {

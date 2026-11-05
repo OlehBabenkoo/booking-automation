@@ -50,7 +50,7 @@ export const MENUBAR_TRANSLATION = {
     flights: 'Flights',
     packages: 'Flight + Hotel',
     cars: 'Car rental',
-    attractions: 'Attranctions',
+    attractions: /^(Attractions|Activities)$/,
     airportTaxis: 'Airport transfers',
   },
   uk: {
@@ -66,7 +66,7 @@ export const MENUBAR_TRANSLATION = {
     flights: 'Flights',
     packages: 'Flight + Hotel',
     cars: 'Car rental',
-    attractions: 'Attranctions',
+    attractions: /^(Attractions|Activities)$/,
     airportTaxis: 'Airport transfers',
   },
 } satisfies Record<
@@ -86,6 +86,7 @@ export const SEARCHBOX_TRANSLATIONS = {
     searchBoxDestinationTitle: /^(Enter destination|Search in your own words)$/,
     searchBoxDestinationPlaceholderText: 'Where are you going?',
     searchBoxDates: 'Select datesCheck-in date — Check-out date',
+    searchBoxDatesTitle: 'Select dates',
     searchBoxOccupancyTitle: 'Select occupancy2 adults · 0 children · 1 room',
     searchButtonText: 'Search',
   },
@@ -93,6 +94,7 @@ export const SEARCHBOX_TRANSLATIONS = {
     searchBoxDestinationTitle: 'Введіть напрямок',
     searchBoxDestinationPlaceholderText: 'Куди ви вирушаєте?',
     searchBoxDates: 'Виберіть датиДата заїзду — Дата виїзду',
+    searchBoxDatesTitle: 'Виберіть дати',
     searchBoxOccupancyTitle: 'Виберіть місткість2 дорослих · 0 дітей · 1 номер',
     searchButtonText: 'Шукати',
   },
@@ -100,6 +102,7 @@ export const SEARCHBOX_TRANSLATIONS = {
     searchBoxDestinationTitle: /^(Enter destination|Search in your own words)$/,
     searchBoxDestinationPlaceholderText: 'Where are you going?',
     searchBoxDates: 'Select datesCheck-in date — Check-out date',
+    searchBoxDatesTitle: 'Select dates',
     searchBoxOccupancyTitle: 'Select occupancy2 adults · 0 children · 1 room',
     searchButtonText: 'Search',
   },
@@ -109,6 +112,7 @@ export const SEARCHBOX_TRANSLATIONS = {
     searchBoxDestinationTitle: string | RegExp;
     searchBoxDestinationPlaceholderText: string;
     searchBoxDates: string;
+    searchBoxDatesTitle: string;
     searchBoxOccupancyTitle: string;
     searchButtonText: string;
   }

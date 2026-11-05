@@ -9,19 +9,23 @@ type ComponentTestFixture = {
 };
 
 export const componentTest = base.extend<ComponentTestFixture>({
-  headerComponent: async ({ page }, use) => {
-    await use(new components.HeaderComponent(page));
+  headerComponent: async ({ page, isMobile }, use) => {
+    await use(
+      isMobile ? new components.MobileHeaderComponent(page) : new components.DesktopHeaderComponent(page),
+    );
   },
 
   heroBannerComponent: async ({ page }, use) => {
     await use(new components.HeroBannerComponent(page));
   },
 
-  languageSelectionModal: async ({ page }, use) => {
-    await use(new components.LanguageSelectionModal(page));
+  languageSelectionModal: async ({ page, isMobile }, use) => {
+    await use(new components.LanguageSelectionModal(page, isMobile));
   },
 
-  searchComponent: async ({ page }, use) => {
-    await use(new components.SearchComponent(page));
+  searchComponent: async ({ page, isMobile }, use) => {
+    await use(
+      isMobile ? new components.MobileSearchComponent(page) : new components.DesktopSearchComponent(page),
+    );
   },
 });

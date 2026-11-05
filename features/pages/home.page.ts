@@ -6,16 +6,21 @@ export class HomePage extends BasePage {
   private readonly signInModalDismissButton = this.page.getByRole('button', {
     name: /Dismiss sign.in info/i,
   });
-  private readonly destinationInput = this.page.locator('#searchbox-horizontal-destination-input');
+  private readonly searchBox = this.page
+    .locator('#SearchBoxDesktop') // desktop
+    .or(this.page.locator('#SearchBoxMobile')); // mobile
 
-  constructor(page: Page) {
+  constructor(
+    page: Page,
+    private readonly isMobile: boolean,
+  ) {
     super(page, '/');
   }
 
   override async open(language: Language = 'en-gb'): Promise<void> {
     await test.step(`Open Home page (lang=${language})`, async () => {
       await this.page.goto(`/?lang=${language}`);
-      await expect(this.destinationInput).toBeVisible({ timeout: 15_000 });
+      await expect(this.searchBox).toBeVisible({ timeout: 15_000 });
 
       const url = new URL(this.page.url());
       const requestedLanguageIsSet =
@@ -23,10 +28,13 @@ export class HomePage extends BasePage {
 
       if (!requestedLanguageIsSet) {
         await this.page.goto(`/?lang=${language}`);
-        await expect(this.destinationInput).toBeVisible({ timeout: 15_000 });
+        await expect(this.searchBox).toBeVisible({ timeout: 15_000 });
       }
 
-      await this.dismissSignInInfo();
+      // The sign-in popup is shown only on desktop
+      if (!this.isMobile) {
+        await this.dismissSignInInfo();
+      }
     });
   }
 

@@ -1,3 +1,4 @@
+import { DesktopHeaderComponent } from '@features/components';
 import { test } from '@utils/fixtures';
 import { LANGUAGES } from '@utils/testData/languages';
 
@@ -8,8 +9,7 @@ test.describe('Language Selector', () => {
   const ukrainian = LANGUAGES.ukrainian;
   const expectedUaUrl = '/index.uk.html';
 
-  test.beforeEach(async ({ homePage, isMobile }) => {
-    test.skip(isMobile === true, 'Mobile page objects are not implemented yet');
+  test.beforeEach(async ({ homePage }) => {
     await homePage.open();
   });
 
@@ -17,10 +17,7 @@ test.describe('Language Selector', () => {
     headerComponent,
     languageSelectionModal,
     searchComponent,
-    isMobile,
   }) => {
-    test.skip(isMobile === true, 'Mobile page objects are not implemented yet');
-
     await test.step('1. Click the language selector button in the header', async () => {
       await headerComponent.openLanguageSelectionModal();
     });
@@ -53,10 +50,7 @@ test.describe('Language Selector', () => {
     headerComponent,
     languageSelectionModal,
     searchComponent,
-    isMobile,
   }) => {
-    test.skip(isMobile === true, 'Mobile page objects are not implemented yet');
-
     await test.step('1. Click the language selector button in the header', async () => {
       await headerComponent.openLanguageSelectionModal();
     });
@@ -68,7 +62,10 @@ test.describe('Language Selector', () => {
 
     await test.step('3. Check the texts of the header and the search form', async () => {
       await headerComponent.checkLanguageInHeader(ukrainian.code);
-      await headerComponent.checkRegistrationTranslation(ukrainian.code);
+      // The registration bar is shown only in the desktop header
+      if (headerComponent instanceof DesktopHeaderComponent) {
+        await headerComponent.checkRegistrationTranslation(ukrainian.code);
+      }
       await headerComponent.checkMenubarTranslations(ukrainian.code);
       await searchComponent.checkSearchBoxTranslations(ukrainian.code);
     });
