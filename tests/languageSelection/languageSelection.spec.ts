@@ -3,8 +3,6 @@ import { test } from '@utils/fixtures';
 import { LANGUAGES } from '@utils/testData/languages';
 
 test.describe('Language Selector', () => {
-  test.slow(({ browserName }) => browserName === 'webkit', 'Booking renders slowly in WebKit');
-
   const englishGB = LANGUAGES.englishGB;
   const ukrainian = LANGUAGES.ukrainian;
   const expectedUaUrl = '/index.uk.html';

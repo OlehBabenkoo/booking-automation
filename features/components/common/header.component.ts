@@ -51,10 +51,11 @@ export abstract class HeaderComponent extends BaseComponent {
 
   async openLanguageSelectionModal(): Promise<void> {
     await test.step('Open Language Selection Modal', async () => {
+      await this.revealLanguagePicker();
+
       // After a language change Booking can ignore the first click while the page is still loading
       await expect(async () => {
         if (!(await this.languageModal.isVisible())) {
-          await this.revealLanguagePicker();
           await this.languagePickerButton.click();
         }
         await expect(this.languageModal).toBeVisible({ timeout: 2_000 });

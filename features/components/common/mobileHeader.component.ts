@@ -17,13 +17,14 @@ export class MobileHeaderComponent extends HeaderComponent {
 
   async openBurgerMenu(): Promise<void> {
     await test.step('Open the burger menu', async () => {
-      // After a language change Booking can ignore the first click while the page is still loading
+      // After a language change Booking can ignore the first click while the page is still loading.
+      // The menu slides in slowly in WebKit, so give it time before clicking again (a second click closes it)
       await expect(async () => {
         if (!(await this.burgerMenu.isVisible())) {
           await this.burgerMenuButton.click();
         }
-        await expect(this.burgerMenu).toBeVisible({ timeout: 2_000 });
-      }).toPass({ timeout: 15_000 });
+        await expect(this.burgerMenu).toBeVisible({ timeout: 5_000 });
+      }).toPass({ timeout: 20_000 });
     });
   }
 }
