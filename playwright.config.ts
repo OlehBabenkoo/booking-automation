@@ -14,6 +14,8 @@ export default defineConfig({
     : [['html'], ['list']],
   use: {
     baseURL: 'https://www.booking.com/',
+    // Tests start in en-gb; Booking may pick the "current" language from Accept-Language (default en-US)
+    locale: 'en-GB',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
@@ -35,6 +37,7 @@ export default defineConfig({
     },
     {
       name: 'safari-desktop',
+      timeout: 70_000, // Booking renders slowly in WebKit
       use: {
         ...devices['Desktop Safari'],
         viewport: VIEWPORT.fullHd,
@@ -42,6 +45,7 @@ export default defineConfig({
     },
     {
       name: 'safari-mobile',
+      timeout: 70_000, // Booking renders slowly in WebKit
       use: {
         ...devices['iPhone XR'],
       },

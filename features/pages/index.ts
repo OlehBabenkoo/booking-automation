@@ -1,2 +1,4 @@
-export { HomePage as home } from './home.page';
-export { SearchResultsPage as searchResults } from './searchResults.page';
+import { HomePage } from './home.page';
+import { SearchResultsPage } from './searchResults.page';
+
+export { HomePage, SearchResultsPage };

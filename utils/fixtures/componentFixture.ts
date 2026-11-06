@@ -2,11 +2,30 @@ import * as components from '@features/components';
 import { test as base } from '@playwright/test';
 
 type ComponentTestFixture = {
-  searchComponent: components.search;
+  headerComponent: components.HeaderComponent;
+  heroBannerComponent: components.HeroBannerComponent;
+  languageSelectionModal: components.LanguageSelectionModal;
+  searchComponent: components.SearchComponent;
 };
 
 export const componentTest = base.extend<ComponentTestFixture>({
-  searchComponent: async ({ page }, use) => {
-    await use(new components.search(page));
+  headerComponent: async ({ page, isMobile }, use) => {
+    await use(
+      isMobile ? new components.MobileHeaderComponent(page) : new components.DesktopHeaderComponent(page),
+    );
+  },
+
+  heroBannerComponent: async ({ page }, use) => {
+    await use(new components.HeroBannerComponent(page));
+  },
+
+  languageSelectionModal: async ({ page, isMobile }, use) => {
+    await use(new components.LanguageSelectionModal(page, isMobile));
+  },
+
+  searchComponent: async ({ page, isMobile }, use) => {
+    await use(
+      isMobile ? new components.MobileSearchComponent(page) : new components.DesktopSearchComponent(page),
+    );
   },
 });
