@@ -2,8 +2,10 @@ import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 import { VIEWPORT } from '@utils/viewports';
 import { rpConfig } from './rpConfig/rpConfig';
+import { storageStateFilePath } from '@utils/storageStatePath';
 
 export default defineConfig({
+  timeout: 60_000,
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -21,7 +23,8 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chrome-desktop',
+      name: 'storageState',
+      testMatch: /.*\.setup\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',
@@ -29,26 +32,43 @@ export default defineConfig({
       },
     },
     {
+      name: 'chrome-desktop',
+      testIgnore: /.*\.setup\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
+        viewport: VIEWPORT.fullHd,
+        storageState: storageStateFilePath,
+      },
+      dependencies: ['storageState'],
+    },
+    {
       name: 'chrome-mobile',
+      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['Pixel 7'],
         channel: 'chrome',
       },
+      dependencies: ['storageState'],
     },
     {
       name: 'safari-desktop',
       timeout: 70_000, // Booking renders slowly in WebKit
+      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['Desktop Safari'],
         viewport: VIEWPORT.fullHd,
       },
+      dependencies: ['storageState'],
     },
     {
       name: 'safari-mobile',
       timeout: 70_000, // Booking renders slowly in WebKit
+      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['iPhone XR'],
       },
+      dependencies: ['storageState'],
     },
   ],
 });
