@@ -10,8 +10,8 @@ type PageTestFixture = {
 };
 
 export const pageTest = base.extend<PageTestFixture>({
-  homePage: async ({ page, isMobile }, use) => {
-    await use(new pages.HomePage(page, isMobile));
+  homePage: async ({ page }, use) => {
+    await use(new pages.HomePage(page));
   },
 
   searchResultsPage: async ({ page }, use) => {

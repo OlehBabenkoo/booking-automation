@@ -2,7 +2,7 @@ import { expect, Page, test } from '@playwright/test';
 import { BaseComponent } from './common/base.component';
 
 export class DiscountOfferModal extends BaseComponent {
-  private readonly dismissButton = this.root.getByRole('button', { name: 'Dismiss sign-in info' });
+  private readonly dismissButton = this.root.getByRole('button', { name: 'Dismiss' });
 
   constructor(page: Page) {
     super(page.getByRole('dialog', { name: 'Window offering discounts' }));

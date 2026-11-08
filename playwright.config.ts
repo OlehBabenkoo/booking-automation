@@ -49,7 +49,6 @@ export default defineConfig({
         ...devices['Pixel 7'],
         channel: 'chrome',
       },
-      dependencies: ['storageState'],
     },
     {
       name: 'safari-desktop',
@@ -68,7 +67,6 @@ export default defineConfig({
       use: {
         ...devices['iPhone XR'],
       },
-      dependencies: ['storageState'],
     },
   ],
 });
