@@ -57,6 +57,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Safari'],
         viewport: VIEWPORT.fullHd,
+        storageState: storageStateFilePath,
       },
       dependencies: ['storageState'],
     },
