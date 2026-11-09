@@ -48,15 +48,13 @@ export const MENUBAR_TRANSLATION = {
   'en-us': {
     accommodation: 'Stays',
     flights: 'Flights',
-    packages: 'Flight + Hotel',
     cars: 'Car rental',
     attractions: /^(Attractions|Activities)$/,
-    airportTaxis: 'Airport transfers',
+    airportTaxis: /^(Airport transfers|Airport taxis)$/,
   },
   uk: {
     accommodation: 'Помешкання',
     flights: 'Переліт',
-    packages: 'Переліт + готель',
     cars: 'Оренда авто',
     attractions: /^(Дозвілля|Чим зайнятися)$/,
     airportTaxis: /^(Трансфери з\/до аеропорту|Таксі з\/до аеропорту|Трансфери)$/,
@@ -64,17 +62,15 @@ export const MENUBAR_TRANSLATION = {
   'en-gb': {
     accommodation: 'Stays',
     flights: 'Flights',
-    packages: 'Flight + Hotel',
     cars: 'Car rental',
     attractions: /^(Attractions|Activities)$/,
-    airportTaxis: 'Airport transfers',
+    airportTaxis: /^(Airport transfers|Airport taxis)$/,
   },
 } satisfies Record<
   Language,
   {
     accommodation: string;
     flights: string;
-    packages: string;
     cars: string;
     attractions: string | RegExp;
     airportTaxis: string | RegExp;

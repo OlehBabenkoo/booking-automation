@@ -18,6 +18,7 @@ export abstract class SearchComponent extends BaseComponent {
   abstract verifySuggestion(name: string, region: string): Promise<void>;
   abstract selectSuggestion(name: string, region: string): Promise<void>;
   abstract verifySuggestionsClosed(): Promise<void>;
+  abstract openDatePicker(): Promise<void>;
   abstract verifyDatePickerOpened(): Promise<void>;
   abstract selectDates(checkIn: TestDate, checkOut: TestDate): Promise<void>;
   abstract verifyDatesValue(checkIn: TestDate, checkOut: TestDate): Promise<void>;

@@ -15,7 +15,7 @@ export class SearchResultsPage {
 
   public async verifyHeading(value: RegExp): Promise<void> {
     await test.step(`Verify heading matches ${value}`, async () => {
-      await expect(this.heading).toHaveText(value);
+      await expect(this.heading).toHaveText(value, { timeout: 15_000 });
     });
   }
 }

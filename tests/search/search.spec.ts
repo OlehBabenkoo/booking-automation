@@ -1,13 +1,10 @@
 import { test } from '@utils/fixtures';
+import { searchSessionFilePath } from '@utils/storageStatePath';
 import { formatOccupancy, getLvivSearch } from '@utils/testData/search';
 
 test.describe('Search', () => {
   test.skip(({ isMobile }) => isMobile, 'Mobile search box is not supported yet');
-  test.fixme(true, 'unstable test');
-  test.fixme(
-    ({ browserName }) => browserName === 'webkit',
-    'Booking sometimes redirects search to /city/ua/lviv landing page',
-  );
+  test.use({ storageState: searchSessionFilePath });
 
   test.beforeEach(async ({ homePage }) => {
     await homePage.open();
@@ -29,10 +26,11 @@ test.describe('Search', () => {
       await searchComponent.selectSuggestion(destination.name, destination.region);
       await searchComponent.verifyDestinationValue(destination.fullName);
       await searchComponent.verifySuggestionsClosed();
-      await searchComponent.verifyDatePickerOpened();
     });
 
-    await test.step('3. Select the check-in and check-out dates in the date picker', async () => {
+    await test.step('3. Open the date picker and select the check-in and check-out dates', async () => {
+      await searchComponent.openDatePicker();
+      await searchComponent.verifyDatePickerOpened();
       await searchComponent.selectDates(checkIn, checkOut);
       await searchComponent.verifyDatesValue(checkIn, checkOut);
     });
