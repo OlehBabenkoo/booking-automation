@@ -1,7 +1,8 @@
 import { test } from '@utils/fixtures';
 import { formatOccupancy, getLvivSearch } from '@utils/testData/search';
+import { TAG } from '@utils/testData/tags';
 
-test.describe('Search', () => {
+test.describe('Search', { tag: [TAG.regression, TAG.search] }, () => {
   test.skip(({ isMobile }) => isMobile, 'Mobile search box is not supported yet');
   test.fixme(true, 'unstable test');
   test.fixme(
@@ -13,7 +14,7 @@ test.describe('Search', () => {
     await homePage.open();
   });
 
-  test('TC-SEARCH-001: Verify the search results match the search criteria', async ({
+  test('TC-SEARCH-001: Verify the search results match the search criteria', { tag: TAG.smoke }, async ({
     searchComponent,
     searchResultsPage,
   }) => {
