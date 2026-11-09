@@ -48,6 +48,10 @@ export class MobileSearchComponent extends SearchComponent {
     notImplemented('verifySuggestionsClosed');
   }
 
+  async openDatePicker(): Promise<void> {
+    notImplemented('openDatePicker');
+  }
+
   async verifyDatePickerOpened(): Promise<void> {
     notImplemented('verifyDatePickerOpened');
   }

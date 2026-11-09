@@ -14,6 +14,9 @@ export class DesktopSearchComponent extends SearchComponent {
     this.suggestionsList.getByRole('option', { name: `${name} ${region}`, exact: true });
   private readonly datePicker = this.page.getByTestId('searchbox-datepicker-calendar');
   private readonly dateCell = (date: TestDate) => this.datePicker.locator(`[data-date="${date.iso}"]`);
+  private readonly firstShownDate = this.datePicker.locator('[data-date]').first();
+  private readonly previousMonthButton = this.datePicker.getByRole('button', { name: 'Previous month' });
+  private readonly nextMonthButton = this.datePicker.getByRole('button', { name: 'Next month' });
   private readonly datesContainer = this.root.getByTestId('searchbox-dates-container');
   private readonly checkInDisplay = this.root.getByTestId('date-display-field-start');
   private readonly checkOutDisplay = this.root.getByTestId('date-display-field-end');
@@ -33,7 +36,12 @@ export class DesktopSearchComponent extends SearchComponent {
 
   public async fillDestination(value: string): Promise<void> {
     await test.step(`Fill in "Destination" input with "${value}" value`, async () => {
-      await this.destinationInput.fill(value);
+      await expect(async () => {
+        await this.destinationInput.clear();
+        await this.destinationInput.fill(value);
+        await expect(this.destinationInput).toHaveValue(value);
+        await expect(this.suggestionsList).toBeVisible({ timeout: 2_000 });
+      }).toPass({ timeout: 15_000 });
     });
   }
 
@@ -67,9 +75,17 @@ export class DesktopSearchComponent extends SearchComponent {
     });
   }
 
+  public async openDatePicker(): Promise<void> {
+    await test.step('Open date picker', async () => {
+      await this.datesContainer.click();
+    });
+  }
+
   public async selectDates(checkIn: TestDate, checkOut: TestDate): Promise<void> {
     await test.step(`Select "${checkIn.display}" - "${checkOut.display}" dates`, async () => {
+      await this.showMonthWith(checkIn);
       await this.dateCell(checkIn).click();
+      await this.showMonthWith(checkOut);
       await this.dateCell(checkOut).click();
     });
   }
@@ -119,6 +135,18 @@ export class DesktopSearchComponent extends SearchComponent {
     await test.step(`Verify "Destination" container shows "${expectedText}"`, async () => {
       await expect(this.destinationContainer).toHaveText(expectedText);
     });
+  }
+
+  private async showMonthWith(date: TestDate): Promise<void> {
+    const maxMonthSteps = 12;
+
+    for (let step = 0; step < maxMonthSteps && (await this.dateCell(date).count()) === 0; step++) {
+      const firstShown = await this.firstShownDate.getAttribute('data-date');
+      const button = date.iso < String(firstShown) ? this.previousMonthButton : this.nextMonthButton;
+
+      await button.click();
+      await expect(this.firstShownDate).not.toHaveAttribute('data-date', String(firstShown));
+    }
   }
 
   private async setOccupancyCounter(counter: OccupancyCounter, target: number): Promise<void> {
