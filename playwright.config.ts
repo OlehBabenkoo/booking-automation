@@ -29,6 +29,9 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         channel: 'chrome',
         viewport: VIEWPORT.fullHd,
+        launchOptions: {
+          args: ['--disable-blink-features=AutomationControlled'],
+        },
       },
     },
     {
