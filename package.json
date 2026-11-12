@@ -25,6 +25,7 @@
   "homepage": "https://github.com/OlehBabenkoo/booking-automation#readme",
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",
+    "@packageio/playwright-github-actions-reporter": "^1.10.0",
     "@playwright/test": "^1.63.0",
     "@reportportal/agent-js-playwright": "^5.5.0",
     "@types/node": "^26.6.3",
