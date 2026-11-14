@@ -11,23 +11,24 @@ export class HomePage extends BasePage {
     super(page, '/');
   }
 
-  private async waitForPageToLoad(): Promise<void> {
+  private isLanguageSet(language: Language): boolean {
+    const url = new URL(this.page.url());
+    return url.searchParams.get('lang') === language || url.pathname.endsWith(`/index.${language}.html`);
+  }
+
+  protected override async waitForPageReady(): Promise<void> {
     await expect(this.searchBox).toBeVisible({ timeout: 15_000 });
     await this.page.waitForLoadState('load');
   }
 
   override async open(language: Language = 'en-gb'): Promise<void> {
     await test.step(`Open Home page (lang=${language})`, async () => {
-      await this.page.goto(`/?lang=${language}`);
-      await this.waitForPageToLoad();
+      const url = `${this.path}?lang=${language}`;
 
-      const url = new URL(this.page.url());
-      const requestedLanguageIsSet =
-        url.searchParams.get('lang') === language || url.pathname.endsWith(`/index.${language}.html`);
+      await super.open(url);
 
-      if (!requestedLanguageIsSet) {
-        await this.page.goto(`/?lang=${language}`);
-        await this.waitForPageToLoad();
+      if (!this.isLanguageSet(language)) {
+        await super.open(url);
       }
     });
   }

@@ -34,6 +34,7 @@ export class DesktopSearchComponent extends SearchComponent {
   public async fillDestination(value: string): Promise<void> {
     await test.step(`Fill in "Destination" input with "${value}" value`, async () => {
       await this.destinationInput.fill(value);
+      await expect(this.destinationInput).toHaveValue(value);
     });
   }
 
