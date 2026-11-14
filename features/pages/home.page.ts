@@ -7,8 +7,8 @@ export class HomePage extends BasePage {
     .locator('#SearchBoxDesktop') // desktop
     .or(this.page.locator('#SearchBoxMobile')); // mobile
 
-  constructor(page: Page) {
-    super(page, '/');
+  constructor(page: Page, isMobile: boolean) {
+    super(page, '/', isMobile);
   }
 
   private isLanguageSet(language: Language): boolean {

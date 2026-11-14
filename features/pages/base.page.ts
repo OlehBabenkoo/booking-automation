@@ -7,6 +7,7 @@ export abstract class BasePage {
   constructor(
     protected readonly page: Page,
     protected readonly path: string,
+    protected readonly isMobile: boolean,
   ) {
     this.discountOfferModal = new DiscountOfferModal(page);
   }
@@ -16,7 +17,11 @@ export abstract class BasePage {
   async open(url: string = this.path): Promise<void> {
     await this.page.goto(url);
     await this.waitForPageReady();
-    await this.discountOfferModal.ensureDismissed();
+
+    // the discount modal is desktop-only
+    if (!this.isMobile) {
+      await this.discountOfferModal.ensureDismissed();
+    }
   }
 
   async checkUrl(expectedUrl: string): Promise<void> {
