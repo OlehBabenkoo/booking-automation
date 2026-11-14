@@ -23,7 +23,6 @@ export default defineConfig({
   projects: [
     {
       name: 'chrome-desktop',
-      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',
@@ -32,7 +31,6 @@ export default defineConfig({
     },
     {
       name: 'chrome-mobile',
-      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['Pixel 7'],
         channel: 'chrome',
@@ -41,7 +39,6 @@ export default defineConfig({
     {
       name: 'safari-desktop',
       timeout: 70_000, // Booking renders slowly in WebKit
-      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['Desktop Safari'],
         viewport: VIEWPORT.fullHd,
@@ -50,7 +47,6 @@ export default defineConfig({
     {
       name: 'safari-mobile',
       timeout: 70_000, // Booking renders slowly in WebKit
-      testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['iPhone XR'],
       },
