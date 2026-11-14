@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 import { VIEWPORT } from '@utils/viewports';
 import { rpConfig } from './rpConfig/rpConfig';
-import { storageStateFilePath } from '@utils/storageStatePath';
 
 export default defineConfig({
   timeout: 60_000,
@@ -23,27 +22,13 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'storageState',
-      testMatch: /.*\.setup\.ts/,
-      use: {
-        ...devices['Desktop Chrome'],
-        channel: 'chrome',
-        viewport: VIEWPORT.fullHd,
-        launchOptions: {
-          args: ['--disable-blink-features=AutomationControlled'],
-        },
-      },
-    },
-    {
       name: 'chrome-desktop',
       testIgnore: /.*\.setup\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',
         viewport: VIEWPORT.fullHd,
-        storageState: storageStateFilePath,
       },
-      dependencies: ['storageState'],
     },
     {
       name: 'chrome-mobile',
@@ -60,9 +45,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Safari'],
         viewport: VIEWPORT.fullHd,
-        storageState: storageStateFilePath,
       },
-      dependencies: ['storageState'],
     },
     {
       name: 'safari-mobile',

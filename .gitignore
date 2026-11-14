@@ -3,4 +3,3 @@ node_modules/
 /test-results/
 .env
 .DS_Store
-storageState/

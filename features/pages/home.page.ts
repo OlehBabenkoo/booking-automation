@@ -11,10 +11,15 @@ export class HomePage extends BasePage {
     super(page, '/');
   }
 
+  private async waitForPageToLoad(): Promise<void> {
+    await expect(this.searchBox).toBeVisible({ timeout: 15_000 });
+    await this.page.waitForLoadState('load');
+  }
+
   override async open(language: Language = 'en-gb'): Promise<void> {
     await test.step(`Open Home page (lang=${language})`, async () => {
       await this.page.goto(`/?lang=${language}`);
-      await expect(this.searchBox).toBeVisible({ timeout: 15_000 });
+      await this.waitForPageToLoad();
 
       const url = new URL(this.page.url());
       const requestedLanguageIsSet =
@@ -22,7 +27,7 @@ export class HomePage extends BasePage {
 
       if (!requestedLanguageIsSet) {
         await this.page.goto(`/?lang=${language}`);
-        await expect(this.searchBox).toBeVisible({ timeout: 15_000 });
+        await this.waitForPageToLoad();
       }
     });
   }

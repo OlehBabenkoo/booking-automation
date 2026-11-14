@@ -6,7 +6,6 @@ type ComponentTestFixture = {
   heroBannerComponent: components.HeroBannerComponent;
   languageSelectionModal: components.LanguageSelectionModal;
   searchComponent: components.SearchComponent;
-  discountOfferModal: components.DiscountOfferModal;
 };
 
 export const componentTest = base.extend<ComponentTestFixture>({
@@ -28,9 +27,5 @@ export const componentTest = base.extend<ComponentTestFixture>({
     await use(
       isMobile ? new components.MobileSearchComponent(page) : new components.DesktopSearchComponent(page),
     );
-  },
-
-  discountOfferModal: async ({ page }, use) => {
-    await use(new components.DiscountOfferModal(page));
   },
 });
