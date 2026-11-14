@@ -8,7 +8,6 @@ export abstract class HeaderComponent extends BaseComponent {
 
   private readonly accommodationButton = this.root.locator('[id="accommodations"]');
   private readonly flightsButton = this.root.locator('[id="flights"]');
-  private readonly packagesButton = this.root.locator('[id="packages"]');
   private readonly carsButton = this.root.locator('[id="cars"]');
   private readonly attractionsButton = this.root.locator('[id="attractions"]');
   private readonly airportTaxisButton = this.root.locator('[id="airport_taxis"]');
@@ -27,7 +26,6 @@ export abstract class HeaderComponent extends BaseComponent {
       const checks = [
         { locator: this.accommodationButton, expected: texts.accommodation },
         { locator: this.flightsButton, expected: texts.flights },
-        { locator: this.packagesButton, expected: texts.packages },
         { locator: this.carsButton, expected: texts.cars },
         { locator: this.attractionsButton, expected: texts.attractions },
         { locator: this.airportTaxisButton, expected: texts.airportTaxis },

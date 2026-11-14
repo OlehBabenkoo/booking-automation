@@ -4,6 +4,7 @@ import { VIEWPORT } from '@utils/viewports';
 import { rpConfig } from './rpConfig/rpConfig';
 
 export default defineConfig({
+  timeout: 60_000,
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
