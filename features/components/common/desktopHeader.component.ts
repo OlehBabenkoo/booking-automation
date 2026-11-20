@@ -7,7 +7,7 @@ export class DesktopHeaderComponent extends HeaderComponent {
   protected readonly languageModal = this.page.getByTestId('selection-modal');
   private readonly listPropertyButton = this.root.getByTestId('header-custom-action-button');
   private readonly signUpButton = this.root.getByTestId('header-sign-up-button');
-  private readonly signInButton = this.root.getByTestId('header-sign-in-button');
+  protected readonly signInButton = this.root.getByTestId('header-sign-in-button');
 
   protected async revealLanguagePicker(): Promise<void> {
     // The language picker is always visible in the desktop header

@@ -8,6 +8,7 @@ export class MobileHeaderComponent extends HeaderComponent {
     'header-mobile-menu-language-picker-menu-item',
   );
   protected readonly languageModal = this.page.getByTestId('header-mobile-menu-language-picker-modal');
+  protected readonly signInButton = this.root.getByTestId('header-small-sign-in-button');
 
   protected async revealLanguagePicker(): Promise<void> {
     if (!(await this.burgerMenu.isVisible())) {
