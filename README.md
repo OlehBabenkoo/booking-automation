@@ -68,18 +68,21 @@ npx playwright test --project=chrome-desktop
 
 Tests are tagged with [Playwright tags](https://playwright.dev/docs/test-annotations#tag-tests). Tag values live in `utils/testData/tags.ts` (`TAG`), so use the constant instead of a raw string.
 
-| Tag | Meaning |
-|---|---|
-| `@smoke` | Short set of critical checks, one main flow per feature |
-| `@regression` | Full regression suite: every test |
-| `@search` | Search box and search results |
-| `@language` | Language selector |
+Tags are grouped by purpose:
 
-Suite and feature tags go on `test.describe`, `@smoke` goes on individual tests:
+| Group | Tag | Meaning |
+|---|---|---|
+| `TAG.type` | `@smoke` | Short set of critical checks, one main flow per feature |
+| `TAG.type` | `@regression` | Full regression suite: every test |
+| `TAG.area` | `@search` | Search box and search results |
+| `TAG.area` | `@language` | Language selector |
+| `TAG.owner` | `@firstname.lastname` | Author responsible for the tests, e.g. `@serhii.honcharuk` |
+
+Suite, area and owner tags go on `test.describe`, `@smoke` goes on individual tests:
 
 ```ts
-test.describe('Search', { tag: [TAG.regression, TAG.search] }, () => {
-  test('TC-SEARCH-001: ...', { tag: TAG.smoke }, async ({ searchComponent }) => {
+test.describe('Search', { tag: [TAG.type.regression, TAG.area.search, TAG.owner.serhiiHoncharuk] }, () => {
+  test('TC-SEARCH-001: ...', { tag: TAG.type.smoke }, async ({ searchComponent }) => {
     // ...
   });
 });
@@ -90,6 +93,7 @@ Run by tag (a regular expression, `|` means OR):
 ```bash
 npx playwright test --grep @smoke
 npx playwright test --grep "@search|@language"
+npx playwright test --grep @serhii.honcharuk
 npx playwright test --grep @regression --grep-invert @smoke
 ```
 

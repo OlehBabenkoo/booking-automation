@@ -1,8 +1,15 @@
 /** Playwright test tags: filter runs with `--grep`, e.g. `npx playwright test --grep @smoke`. */
 export const TAG = {
-  smoke: '@smoke',
-  regression: '@regression',
-
-  search: '@search',
-  language: '@language',
+  type: {
+    smoke: '@smoke',
+    regression: '@regression',
+  },
+  area: {
+    search: '@search',
+    language: '@language',
+  },
+  owner: {
+    serhiiHoncharuk: '@serhii.honcharuk',
+    dmytroAtchalko: '@dmytro.atchalko',
+  },
 } as const;
