@@ -9,7 +9,9 @@
     "lint": "biome lint --write .",
     "prepare": "husky",
     "check": "biome check .",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "test:otp": "playwright test --config=playwright.otp.config.ts",
+    "auth:passkey": "playwright test --config=playwright.passkeys.config.ts --headed"
   },
   "repository": {
     "type": "git",
