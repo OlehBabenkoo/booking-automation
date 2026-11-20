@@ -1,8 +1,11 @@
 import { DesktopHeaderComponent } from '@features/components';
 import { test } from '@utils/fixtures';
 import { LANGUAGES } from '@utils/testData/languages';
+import { TAG } from '@utils/testData/tags';
 
-test.describe('Language Selector', () => {
+test.describe('Language Selector', {
+  tag: [TAG.type.regression, TAG.area.language, TAG.owner.dmytroAtchalko],
+}, () => {
   const englishGB = LANGUAGES.englishGB;
   const ukrainian = LANGUAGES.ukrainian;
   const expectedUaUrl = '/index.uk.html';
@@ -43,12 +46,9 @@ test.describe('Language Selector', () => {
     });
   });
 
-  test('TC-LANG-002 - Verify choosing Ukrainian applies it to the header and the search form and the selector marks it as the language in use', async ({
-    homePage,
-    headerComponent,
-    languageSelectionModal,
-    searchComponent,
-  }) => {
+  test('TC-LANG-002 - Verify choosing Ukrainian applies it to the header and the search form and the selector marks it as the language in use', {
+    tag: TAG.type.smoke,
+  }, async ({ homePage, headerComponent, languageSelectionModal, searchComponent }) => {
     await test.step('1. Click the language selector button in the header', async () => {
       await headerComponent.openLanguageSelectionModal();
     });

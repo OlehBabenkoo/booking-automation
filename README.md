@@ -64,6 +64,41 @@ Run a single project:
 npx playwright test --project=chrome-desktop
 ```
 
+### Test tags
+
+Tests are tagged with [Playwright tags](https://playwright.dev/docs/test-annotations#tag-tests). Tag values live in `utils/testData/tags.ts` (`TAG`), so use the constant instead of a raw string.
+
+Tags are grouped by purpose:
+
+| Group | Tag | Meaning |
+|---|---|---|
+| `TAG.type` | `@smoke` | Short set of critical checks, one main flow per feature |
+| `TAG.type` | `@regression` | Full regression suite: every test |
+| `TAG.area` | `@search` | Search box and search results |
+| `TAG.area` | `@language` | Language selector |
+| `TAG.owner` | `@firstname.lastname` | Author responsible for the tests, e.g. `@anna.sydoruk` |
+
+Suite, area and owner tags go on `test.describe`, `@smoke` goes on individual tests:
+
+```ts
+test.describe('Search', { tag: [TAG.type.regression, TAG.area.search, TAG.owner.annaSydoruk] }, () => {
+  test('TC-SEARCH-001: ...', { tag: TAG.type.smoke }, async ({ searchComponent }) => {
+    // ...
+  });
+});
+```
+
+Run by tag (a regular expression, `|` means OR):
+
+```bash
+npx playwright test --grep @smoke
+npx playwright test --grep "@search|@language"
+npx playwright test --grep @anna.sydoruk
+npx playwright test --grep @regression --grep-invert @smoke
+```
+
+The manual CI run (`manual-tests.yml`) takes the same filter in its `tags` input.
+
 Note: `safari-*` projects use Playwright's WebKit build, which is not real Safari.
 
 ## Project Structure
