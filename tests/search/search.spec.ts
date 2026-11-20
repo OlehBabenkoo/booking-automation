@@ -4,14 +4,18 @@ import { TAG } from '@utils/testData/tags';
 
 test.describe('Search', { tag: [TAG.regression, TAG.search] }, () => {
   test.skip(({ isMobile }) => isMobile, 'Mobile search box is not supported yet');
-  test.fixme(true, 'unstable test');
-  test.fixme(
-    ({ browserName }) => browserName === 'webkit',
-    'Booking sometimes redirects search to /city/ua/lviv landing page',
-  );
 
-  test.beforeEach(async ({ homePage }) => {
-    await homePage.open();
+  test.beforeEach(async ({ homePage, context, isMobile, page }) => {
+    if (!isMobile) {
+      await context.addInitScript(() => {
+        Object.defineProperty(Navigator.prototype, 'webdriver', {
+          get: () => false,
+          configurable: true,
+        });
+      });
+
+      await homePage.open();
+    }
   });
 
   test('TC-SEARCH-001: Verify the search results match the search criteria', { tag: TAG.smoke }, async ({
