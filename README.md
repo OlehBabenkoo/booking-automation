@@ -76,12 +76,12 @@ Tags are grouped by purpose:
 | `TAG.type` | `@regression` | Full regression suite: every test |
 | `TAG.area` | `@search` | Search box and search results |
 | `TAG.area` | `@language` | Language selector |
-| `TAG.owner` | `@firstname.lastname` | Author responsible for the tests, e.g. `@serhii.honcharuk` |
+| `TAG.owner` | `@firstname.lastname` | Author responsible for the tests, e.g. `@anna.sydoruk` |
 
 Suite, area and owner tags go on `test.describe`, `@smoke` goes on individual tests:
 
 ```ts
-test.describe('Search', { tag: [TAG.type.regression, TAG.area.search, TAG.owner.serhiiHoncharuk] }, () => {
+test.describe('Search', { tag: [TAG.type.regression, TAG.area.search, TAG.owner.annaSydoruk] }, () => {
   test('TC-SEARCH-001: ...', { tag: TAG.type.smoke }, async ({ searchComponent }) => {
     // ...
   });
@@ -93,7 +93,7 @@ Run by tag (a regular expression, `|` means OR):
 ```bash
 npx playwright test --grep @smoke
 npx playwright test --grep "@search|@language"
-npx playwright test --grep @serhii.honcharuk
+npx playwright test --grep @anna.sydoruk
 npx playwright test --grep @regression --grep-invert @smoke
 ```
 

@@ -9,7 +9,9 @@ export const TAG = {
     language: '@language',
   },
   owner: {
+    annaSydoruk: '@anna.sydoruk',
     serhiiHoncharuk: '@serhii.honcharuk',
     dmytroAtchalko: '@dmytro.atchalko',
+    olehBabenko: '@oleh.babenko',
   },
 } as const;
