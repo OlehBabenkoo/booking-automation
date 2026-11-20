@@ -100,10 +100,13 @@ export const authFixture = savedSessionFixture(sharedAccount);
 export const accountSettingsFixture = savedSessionFixture(settingsAccount);
 
 export const passkeyFixture = base.extend({
-  storageState: async ({}, use, testInfo) => {
+  storageState: async ({}, use) => {
     const account = passkeyAccount();
-    const ready = existsSync(passkeyFile(account)) && existsSync(deviceStateFile(account));
-    testInfo.skip(!ready, 'No passkey registered: run npm run auth:passkey');
+    if (!existsSync(passkeyFile(account)) || !existsSync(deviceStateFile(account))) {
+      throw new Error(
+        'No passkey in .auth/: run npm run auth:passkey (CI: set PASSKEY_JSON and PASSKEY_DEVICE_JSON)',
+      );
+    }
     await use(deviceStateFile(account));
   },
   context: async ({ context }, use) => {

@@ -150,6 +150,19 @@ Everything lives in `.auth/` (git-ignored: it holds private keys and session coo
 
 Deleting a session file is always safe: the next run signs in again.
 
+### CI
+
+CI has no `.env` and no `.auth/`; the workflows pass the same values from the repository settings
+(Settings → Secrets and variables → Actions):
+
+| Kind | Names |
+|---|---|
+| Secrets | `DSE_API_KEY`, `DSE_API_KEY_SETTINGS`, `PASSKEY_JSON` (content of `.auth/passkey-chrome-desktop.json`), `PASSKEY_DEVICE_JSON` (content of `.auth/device-chrome-desktop.json`) |
+| Variables | every `DSE_EMAIL_*` from `.env.example` |
+
+The workflows write the two passkey secrets to `.auth/` before the tests, so the passkey test runs the same way as locally.
+`@otp` tests are not run by the CI workflows.
+
 ### Booking quirks handled by the framework
 
 - Automated browsers get a CAPTCHA on sign-in; `hideWebdriverFlag()` hides `navigator.webdriver`.
