@@ -5,7 +5,7 @@ import { SignInPage } from '@features/pages';
 import { type APIRequest, type Browser, test as base, type FullProject } from '@playwright/test';
 import { type Account, passkeyAccount, settingsAccount, sharedAccount } from '@utils/helpers/accounts';
 import { deviceStateFile, loadPasskey, passkeyFile, sessionFile } from '@utils/helpers/authState';
-import { hideWebdriverFlag } from '@utils/helpers/browser';
+import { hideWebdriverFlag, provideWebAuthnApi } from '@utils/helpers/browser';
 import { signInWithEmailCode } from '@utils/helpers/signIn';
 
 const SESSION_MAX_AGE_MS = 12 * 60 * 60 * 1000;
@@ -111,6 +111,7 @@ export const passkeyFixture = base.extend({
   },
   context: async ({ context }, use) => {
     await hideWebdriverFlag(context);
+    await provideWebAuthnApi(context);
     await loadPasskey(context, passkeyAccount());
     await use(context);
   },
