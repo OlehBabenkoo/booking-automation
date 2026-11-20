@@ -6,6 +6,7 @@ import { DesktopSearchComponent } from './desktopSearch';
 import { HeroBannerComponent } from './heroBanner.component';
 import { MobileSearchComponent } from './mobileSearch';
 import { SearchComponent } from './search';
+import { DiscountOfferModal } from './discountOfferModal';
 
 export {
   DesktopHeaderComponent,
@@ -16,4 +17,5 @@ export {
   MobileHeaderComponent,
   MobileSearchComponent,
   SearchComponent,
+  DiscountOfferModal,
 };
