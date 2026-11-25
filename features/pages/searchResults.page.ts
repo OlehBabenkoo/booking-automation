@@ -29,7 +29,6 @@ export class SearchResultsPage {
     });
   }
 
-  // Mobile layout collapses the search form into a summary bar
   public async verifySearchSummary(value: RegExp): Promise<void> {
     await test.step(`Verify search summary matches ${value}`, async () => {
       await expect(this.searchSummary).toHaveText(value);

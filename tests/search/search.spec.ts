@@ -85,7 +85,6 @@ test.describe('Search', { tag: [TAG.type.regression, TAG.area.search, TAG.owner.
         await searchResultsPage.verifyPropertyCardsVisible();
       });
 
-      // On mobile the Search Results page collapses the search form into a summary bar
       await test.step('6. Check the search form on the Search Results page', async () => {
         await searchResultsPage.verifySearchSummary(toSearchSummaryPattern(search));
         await searchResultsPage.verifySearchParams(toSearchParams(search));

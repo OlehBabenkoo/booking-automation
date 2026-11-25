@@ -42,7 +42,6 @@ export const getLvivSearch = () => ({
 
 export type SearchData = ReturnType<typeof getLvivSearch>;
 
-/** The mobile search summary shows only adults; children and rooms are checked in the URL (see toSearchParams). */
 export const toSearchSummaryPattern = ({ destination, checkIn, checkOut, occupancy }: SearchData): RegExp => {
   const stay = `${toDayMonthRangeSource(checkIn, checkOut)} \\(${pluralize(nightsBetween(checkIn, checkOut), NIGHT_FORMS)}\\)`;
   const adults = pluralize(occupancy.adults, OCCUPANCY_FORMS.adults);

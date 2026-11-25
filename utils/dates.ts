@@ -53,13 +53,11 @@ export const daysFromToday = (days: number): TestDate => {
   };
 };
 
-/** Mobile search form shows the dates as one range with years: "Wed 25 Nov 2026 - Thu 26 Nov 2026". */
 export const toDateRangePattern = (checkIn: TestDate, checkOut: TestDate): RegExp =>
   new RegExp(
     `^${toPatternSource(fromIso(checkIn.iso), true)} - ${toPatternSource(fromIso(checkOut.iso), true)}$`,
   );
 
-/** Regex source for a date range without weekdays, as in the mobile search summary: "30 Nov - 2 Dec". */
 export const toDayMonthRangeSource = (checkIn: TestDate, checkOut: TestDate): string =>
   `${toDayMonthSource(fromIso(checkIn.iso))} - ${toDayMonthSource(fromIso(checkOut.iso))}`;
 

@@ -5,7 +5,6 @@ import { SearchComponent } from './search';
 
 export class MobileSearchComponent extends SearchComponent {
   protected readonly destinationInput = this.root.getByTestId('searchbox-destination-input');
-  // The form input is a read-only trigger covered by its label; typing happens in a separate sheet
   protected readonly destinationContainer = this.root.locator('label', {
     has: this.page.getByTestId('searchbox-destination-input'),
   });
@@ -38,8 +37,6 @@ export class MobileSearchComponent extends SearchComponent {
 
   public async fillDestination(value: string): Promise<void> {
     await test.step(`Fill in "Destination" input with "${value}" value`, async () => {
-      // Booking shows the form before its script is ready, and an early tap only focuses the read-only input.
-      // The search box writes its state to history.state once it can handle taps, so wait for that first
       await this.page.waitForFunction(
         () => history.state?.__webShellSearchBoxAutocompleteActive !== undefined,
       );
