@@ -8,6 +8,11 @@ export const TAG = {
     search: '@search',
     language: '@language',
   },
+  /** Runs the test only in projects of this layout (see `grepInvert` in playwright.config.ts). */
+  layout: {
+    desktop: '@desktop',
+    mobile: '@mobile',
+  },
   owner: {
     annaSydoruk: '@anna.sydoruk',
     serhiiHoncharuk: '@serhii.honcharuk',

@@ -1,7 +1,11 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
+import { TAG } from '@utils/testData/tags';
 import { VIEWPORT } from '@utils/viewports';
 import { rpConfig } from './rpConfig/rpConfig';
+
+const DESKTOP_ONLY = new RegExp(TAG.layout.desktop);
+const MOBILE_ONLY = new RegExp(TAG.layout.mobile);
 
 export default defineConfig({
   timeout: 60_000,
@@ -28,6 +32,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chrome-desktop',
+      grepInvert: MOBILE_ONLY,
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',
@@ -36,6 +41,7 @@ export default defineConfig({
     },
     {
       name: 'chrome-mobile',
+      grepInvert: DESKTOP_ONLY,
       use: {
         ...devices['Pixel 7'],
         channel: 'chrome',
@@ -43,6 +49,7 @@ export default defineConfig({
     },
     {
       name: 'safari-desktop',
+      grepInvert: MOBILE_ONLY,
       timeout: 70_000, // Booking renders slowly in WebKit
       use: {
         ...devices['Desktop Safari'],
@@ -51,6 +58,7 @@ export default defineConfig({
     },
     {
       name: 'safari-mobile',
+      grepInvert: DESKTOP_ONLY,
       timeout: 70_000, // Booking renders slowly in WebKit
       use: {
         ...devices['iPhone XR'],

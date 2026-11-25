@@ -77,6 +77,8 @@ Tags are grouped by purpose:
 | `TAG.area` | `@search` | Search box and search results |
 | `TAG.area` | `@language` | Language selector |
 | `TAG.owner` | `@firstname.lastname` | Author responsible for the tests, e.g. `@anna.sydoruk` |
+| `TAG.layout` | `@desktop` | Runs only in `*-desktop` projects |
+| `TAG.layout` | `@mobile` | Runs only in `*-mobile` projects |
 
 Suite, area and owner tags go on `test.describe`, `@smoke` goes on individual tests:
 
@@ -85,6 +87,14 @@ test.describe('Search', { tag: [TAG.type.regression, TAG.area.search, TAG.owner.
   test('TC-SEARCH-001: ...', { tag: TAG.type.smoke }, async ({ searchComponent }) => {
     // ...
   });
+});
+```
+
+When a flow differs between desktop and mobile, write a separate test for each layout and tag it with `TAG.layout`. Don't use `test.skip`: skipped tests show up in CI reports. Each project's `grepInvert` in `playwright.config.ts` drops the other layout's tests, so they are not collected at all. Tests without a layout tag run in every project.
+
+```ts
+test('TC-SEARCH-001: ... (mobile)', { tag: [TAG.type.smoke, TAG.layout.mobile] }, async () => {
+  // ...
 });
 ```
 
