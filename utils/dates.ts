@@ -1,7 +1,6 @@
 export type TestDate = {
   iso: string;
   display: string;
-  // Booking picks the date format by region: "Tue 3 Nov" (en-GB) or "Tue, Nov 3" (en-US, e.g. CI runners)
   displayPattern: RegExp;
 };
 

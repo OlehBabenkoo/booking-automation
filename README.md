@@ -30,17 +30,20 @@ npx playwright install
 npx playwright install chrome
 ```
 
-4. Create a `.env` file in the project root:
+4. Copy `.env.example` to `.env` and fill it in. Every variable is described in
+   [Test Accounts and Sign-In](#test-accounts-and-sign-in). `.env` is git-ignored: never commit it.
 
-```
-BASE_URL=<url-of-the-application-under-test>
+```bash
+cp .env.example .env
 ```
 
 ## Available Scripts
 
 | Script | Description |
 |---|---|
-| `npm test` | Run all tests on all Playwright projects |
+| `npm test` | Run all tests on all Playwright projects, except `@otp` |
+| `npm run test:otp` | Run the email-code sign-in tests (`@otp`), one at a time |
+| `npm run auth:passkey` | Register the passkey for the passkey test (one-off, headed) |
 | `npm run test:ui` | Run tests in Playwright UI mode |
 | `npm run tsc` | TypeScript compilation check (no emit) |
 | `npm run check` | Biome lint + format + import order check (read-only) |
@@ -101,18 +104,132 @@ The manual CI run (`manual-tests.yml`) takes the same filter in its `tags` input
 
 Note: `safari-*` projects use Playwright's WebKit build, which is not real Safari.
 
+### Tags
+
+| Tag | Meaning |
+|---|---|
+| `@otp` | Signs in with a real email code. Skipped by `npm test`; run with `npm run test:otp` |
+| `@passkey` | Signs in with the registered passkey; skipped if no passkey is registered |
+| `@FR-<FEATURE>-<NNN>` | SRS requirement the test covers, for the Traceability Matrix |
+
+Run the tests of one requirement:
+
+```bash
+npx playwright test --grep @FR-SIGNIN-002
+```
+
+## Test Accounts and Sign-In
+
+### Accounts
+
+Tests never hard-code an account: they ask for one by role (`utils/helpers/accounts.ts`), and every role
+reads its inbox from `.env`. Inboxes are [Dead Simple Email](https://deadsimple.email) inboxes, read through
+its REST API to get Booking's verification codes (`utils/helpers/deadSimpleEmail.ts`).
+
+| Role | `.env` variables | Used by |
+|---|---|---|
+| Sign-in, one per project | `DSE_EMAIL_<PROJECT>` | `@otp` tests: sign in with a code, wrong code, new code, sign out |
+| Shared session | `DSE_EMAIL_SHARED` | `authTest`: every other test that needs a signed-in user |
+| Account settings, one per project | `DSE_EMAIL_SETTINGS_<PROJECT>` | `accountSettingsTest`: tests that change account-wide data |
+| Passkey | the `chrome-desktop` sign-in account | `passkeyTest`: TC-SIGNIN-006 |
+
+`<PROJECT>` is the project name in upper case: `CHROME_DESKTOP`, `CHROME_MOBILE`, `SAFARI_DESKTOP`, `SAFARI_MOBILE`.
+The inboxes use `DSE_API_KEY`; settings inboxes use `DSE_API_KEY_SETTINGS` if it is set.
+A Booking account is created automatically the first time its inbox signs in with a code.
+
+Why the accounts are split this way:
+
+- Booking limits sign-ins per mailbox ("Too many attempts"), so each project signs in to its own account.
+- Tests that change account-wide data (profile, display settings) run on the project's own account, so
+  parallel projects and the shared session never see the change. They must restore what they change.
+- Language and currency chosen in the header are stored in the browser, not the account, so they are safe anywhere.
+- Never run two test runs against the same set of inboxes at the same time: they would read each other's codes.
+
+### Fixtures
+
+| Fixture | Starts the test | Notes |
+|---|---|---|
+| `test` | signed out | default |
+| `authTest` | signed in to the shared account | must not sign out or change account-wide data |
+| `accountSettingsTest` | signed in to the project's settings account | must restore what it changes |
+| `passkeyTest` | signed out, holding the passkey | Booking signs it in on the Sign in page |
+
+`authTest` and `accountSettingsTest` sign in once with an email code, save the session to `.auth/` and reuse it
+across tests and runs. Before using a saved session they check it is still signed in and less than 12 hours old,
+otherwise one worker signs in again while the others wait.
+
+### Passkey
+
+Booking accepts a passkey from Playwright's virtual authenticator, but ends these sessions within ~3–4 minutes,
+while email-code sessions survive being saved and reused. So passkeys are only used for the short passkey
+sign-in test, and saved sessions always come from an email code.
+
+Booking offers the passkey only to a browser that enrolled it, so registration saves both the passkey and that
+browser's signed-out state. Register again if the passkey test starts getting an email code instead:
+
+```bash
+npm run auth:passkey
+```
+
+It costs two email codes (sign-in and enrollment confirmation).
+
+### Saved state
+
+Everything lives in `.auth/` (git-ignored: it holds private keys and session cookies):
+
+| File | Content |
+|---|---|
+| `session-<account>.json` | Saved signed-in session (created and refreshed automatically) |
+| `passkey-<account>.json` | Passkey private key |
+| `device-<account>.json` | Signed-out browser state Booking needs to offer the passkey |
+
+Deleting a session file is always safe: the next run signs in again.
+
+### CI
+
+CI has no `.env` and no `.auth/`; the workflows pass the same values from the repository settings
+(Settings → Secrets and variables → Actions):
+
+| Kind | Names |
+|---|---|
+| Secrets | `DSE_API_KEY`, `DSE_API_KEY_SETTINGS`, `PASSKEY_JSON` (content of `.auth/passkey-chrome-desktop.json`), `PASSKEY_DEVICE_JSON` (content of `.auth/device-chrome-desktop.json`) |
+| Variables | every `DSE_EMAIL_*` from `.env.example` |
+
+The workflows write the two passkey secrets to `.auth/` before the tests, so the passkey test runs the same way as locally.
+`@otp` tests are not run by the CI workflows.
+
+### Booking quirks handled by the framework
+
+- Automated browsers get a CAPTCHA on sign-in; `hideWebdriverFlag()` hides `navigator.webdriver`.
+- Server-rendered widgets ignore clicks until React is ready; `waitForInteractive()` waits for that.
+- Marketing dialogs cover the page: `DiscountOfferModal` closes the discount offer in `BasePage.open()`,
+  `promoFixture` closes seasonal deal sheets (e.g. Black Friday) on any page.
+
 ## Project Structure
 
 ```
 booking-automation/
-├── tests/e2e/               Automated tests
-├── utils/                   Shared helpers (viewports)
-├── .husky/                  Git hooks
-├── biome.json               Biome configuration
-├── playwright.config.ts     Playwright configuration
+├── features/
+│   ├── components/              Page components (header, search, modals)
+│   └── pages/                   Page Objects
+├── tests/
+│   ├── languageSelection/
+│   ├── search/
+│   ├── signIn/                  Sign-in, sign-out and passkey tests
+│   └── setup/                   Passkey registration (npm run auth:passkey)
+├── utils/
+│   ├── fixtures/                test, authTest, accountSettingsTest, passkeyTest
+│   ├── helpers/                 Accounts, email codes, saved state, browser helpers
+│   └── testData/
+├── .auth/                       Saved sessions and passkey (git-ignored)
+├── .github/workflows/           CI
+├── .husky/                      Git hooks
+├── playwright.config.ts         Main configuration (excludes @otp)
+├── playwright.otp.config.ts     @otp tests, one at a time
+├── playwright.passkeys.config.ts  Passkey registration
+├── biome.json
 ├── tsconfig.json
-├── package.json
-└── README.md
+└── package.json
 ```
 
 ## Git Conventions
