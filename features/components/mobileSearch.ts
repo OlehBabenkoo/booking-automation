@@ -1,23 +1,25 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
+import { type TestDate, toDateRangePattern } from '@utils/dates';
 import { type Language, SEARCHBOX_TRANSLATIONS } from '@utils/testData/languages';
 import { SearchComponent } from './search';
-
-const notImplemented = (method: string): never => {
-  throw new Error(
-    `MobileSearchComponent.${method}() is not implemented yet: mobile search flow is not supported`,
-  );
-};
 
 export class MobileSearchComponent extends SearchComponent {
   protected readonly destinationInput = this.root.getByTestId('searchbox-destination-input');
   protected readonly destinationContainer = this.root.locator('label', {
     has: this.page.getByTestId('searchbox-destination-input'),
   });
+  private readonly destinationSheetInput = this.page.locator('input[name="searchbox-destination"]');
   private readonly datesButton = this.root.getByRole('button', { name: /^(Select dates|Виберіть дати)$/ });
+  private readonly datesValue = this.datesButton.locator('.SearchBoxTrigger_label');
+  private readonly datesDoneButton = this.page
+    .getByRole('dialog')
+    .filter({ has: this.page.getByTestId('searchbox-datepicker') })
+    .getByRole('button', { name: 'Done' }); // TODO: language-dependent locator, works only for English UI
   protected readonly occupancyContainer = this.root.getByRole('button', {
     name: /^(Select occupancy|Виберіть місткість)$/,
   });
-  protected readonly searchButton = this.root.locator('button[type="submit"]');
+  protected readonly occupancyButton = this.occupancyContainer;
+  private readonly occupancyValue = this.occupancyContainer.locator('.SearchBoxTrigger_label');
 
   constructor(page: Page) {
     super(page.locator('#SearchBoxMobile form'));
@@ -28,47 +30,30 @@ export class MobileSearchComponent extends SearchComponent {
     await expect(this.datesButton).toHaveAccessibleName(SEARCHBOX_TRANSLATIONS[language].searchBoxDatesTitle);
   }
 
-  async fillDestination(): Promise<void> {
-    notImplemented('fillDestination');
+  protected override async applyDates(): Promise<void> {
+    await this.datesDoneButton.click();
+    await expect(this.datePicker).toBeHidden();
   }
 
-  async verifyDestinationValue(): Promise<void> {
-    notImplemented('verifyDestinationValue');
+  public async fillDestination(value: string): Promise<void> {
+    await test.step(`Fill in "Destination" input with "${value}" value`, async () => {
+      await this.page.waitForFunction(
+        () => history.state?.__webShellSearchBoxAutocompleteActive !== undefined,
+      );
+      await this.destinationContainer.click();
+      await this.destinationSheetInput.fill(value);
+    });
   }
 
-  async verifySuggestion(): Promise<void> {
-    notImplemented('verifySuggestion');
+  public async verifyDatesValue(checkIn: TestDate, checkOut: TestDate): Promise<void> {
+    await test.step(`Verify dates field shows "${checkIn.display} - ${checkOut.display}"`, async () => {
+      await expect(this.datesValue).toHaveText(toDateRangePattern(checkIn, checkOut));
+    });
   }
 
-  async selectSuggestion(): Promise<void> {
-    notImplemented('selectSuggestion');
-  }
-
-  async verifySuggestionsClosed(): Promise<void> {
-    notImplemented('verifySuggestionsClosed');
-  }
-
-  async verifyDatePickerOpened(): Promise<void> {
-    notImplemented('verifyDatePickerOpened');
-  }
-
-  async selectDates(): Promise<void> {
-    notImplemented('selectDates');
-  }
-
-  async verifyDatesValue(): Promise<void> {
-    notImplemented('verifyDatesValue');
-  }
-
-  async setOccupancy(): Promise<void> {
-    notImplemented('setOccupancy');
-  }
-
-  async verifyOccupancyValue(): Promise<void> {
-    notImplemented('verifyOccupancyValue');
-  }
-
-  async clickSearch(): Promise<void> {
-    notImplemented('clickSearch');
+  public async verifyOccupancyValue(value: string): Promise<void> {
+    await test.step(`Verify occupancy field shows "${value}"`, async () => {
+      await expect(this.occupancyValue).toHaveText(value);
+    });
   }
 }

@@ -8,6 +8,10 @@ export const TAG = {
     search: '@search',
     language: '@language',
   },
+  layout: {
+    desktop: '@desktop',
+    mobile: '@mobile',
+  },
   owner: {
     annaSydoruk: '@anna.sydoruk',
     serhiiHoncharuk: '@serhii.honcharuk',
